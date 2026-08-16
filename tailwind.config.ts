@@ -6,15 +6,17 @@ export default {
     extend: {
       colors: {
         // Logo-matched palette: navy blue cards on a creamy beige
-        // ground, standard navy nav, gold for brand accents.
+        // ground, royal blue (from the "Rhythm & Brews" wordmark) for
+        // brand accents, deep maroon (from the logo's music staff) as
+        // the secondary accent.
         bg: "#f2e9d8",
         panel: "#1c2a4e",
         "panel-2": "#152140",
         brand: {
-          DEFAULT: "#f4b41a",
-          bright: "#ffc94d",
+          DEFAULT: "#3351db",
+          bright: "#637be9",
         },
-        accent: "#e05314",
+        accent: "#9e2e36",
         cream: "#f5f0e4",
         muted: "#a9b4cf",
         red: "#c0392b",

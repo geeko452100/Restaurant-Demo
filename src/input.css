@@ -10,7 +10,7 @@
     @apply m-0 min-h-screen bg-bg text-navy font-serif;
     background-image:
       radial-gradient(ellipse 900px 500px at 50% -10%, rgba(28, 42, 78, 0.06), transparent 60%),
-      radial-gradient(ellipse 700px 400px at 100% 20%, rgba(224, 83, 20, 0.05), transparent 60%);
+      radial-gradient(ellipse 700px 400px at 100% 20%, rgba(158, 46, 54, 0.05), transparent 60%);
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
@@ -45,7 +45,7 @@
     @apply shrink-0 leading-none;
   }
   .topbar-logo img {
-    @apply w-20 h-20 object-contain block drop-shadow-[0_0_10px_rgba(244,180,26,0.35)];
+    @apply w-20 h-20 object-contain block drop-shadow-[0_0_10px_rgba(51,81,219,0.35)];
   }
   .header-actions {
     @apply mt-4 flex justify-center gap-3 flex-wrap;
