@@ -13,7 +13,7 @@ not_found_handling = "404-page"
 binding = "DB"
 database_name = "rhythm-and-brews-db"
 # Replace with the ID printed by `wrangler d1 create rhythm-and-brews-db`.
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "5f1e3364-9c04-475d-a59c-f0fb402e571c"
 migrations_dir = "drizzle/migrations"
 
 [observability]

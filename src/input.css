@@ -17,6 +17,11 @@
 }
 
 @layer components {
+  /* Demo disclaimer: this is a design concept, not the real business's site. */
+  .demo-disclaimer {
+    @apply block text-center bg-red/15 border-b border-red/40 text-cream/90 font-sans text-xs sm:text-sm tracking-wide py-2 px-3;
+  }
+
   /* Topbar: logo far left, nav links right (desktop) / hamburger right (mobile) */
   .topbar {
     @apply flex items-center justify-between gap-4 px-5 py-2.5 border-b border-border sticky top-0 z-20 bg-bg/95 backdrop-blur;
