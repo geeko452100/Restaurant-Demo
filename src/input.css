@@ -6,13 +6,25 @@
   body {
     @apply m-0 min-h-screen bg-bg text-cream font-serif;
     background-image:
-      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(29, 63, 196, 0.16), transparent 60%),
-      radial-gradient(ellipse 700px 400px at 100% 20%, rgba(192, 57, 43, 0.05), transparent 60%);
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(244, 180, 26, 0.1), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 100% 20%, rgba(224, 83, 20, 0.06), transparent 60%);
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
   body.admin-guard-hidden {
     @apply hidden;
+  }
+  /* Bold "live music poster" energy for display headers. Oswald is
+     already condensed, so keep tracking modest and give it a bit more
+     line-height than a display font usually needs — tight leading reads
+     as cramped at this weight. */
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-normal leading-snug;
+  }
+  main p {
+    @apply leading-relaxed text-lg font-sans;
   }
 }
 
@@ -24,7 +36,7 @@
 
   /* Topbar: logo far left, nav links right (desktop) / hamburger right (mobile) */
   .topbar {
-    @apply flex items-center justify-between gap-4 px-5 py-2.5 border-b border-border sticky top-0 z-20 bg-bg/95 backdrop-blur;
+    @apply flex items-center justify-between gap-4 px-5 py-2.5 border-b border-border sticky top-0 z-20 bg-bg/95 backdrop-blur-[10px];
   }
   .topbar-logo {
     @apply shrink-0 leading-none;
@@ -48,11 +60,11 @@
   }
   .site-nav button,
   .ghost-btn {
-    @apply !bg-transparent !text-muted !shadow-none border border-border py-1.5 px-3.5 text-xs hover:!text-brand-bright hover:!border-brand;
+    @apply !bg-transparent !text-muted !shadow-none border border-border py-1.5 px-3.5 text-xs min-h-[48px] hover:!text-brand-bright hover:!border-brand;
   }
 
   .mobile-nav-toggle {
-    @apply flex md:hidden items-center justify-center w-10 h-10 rounded-full !bg-panel !text-cream !shadow-none border border-border text-lg font-normal;
+    @apply flex md:hidden items-center justify-center w-12 h-12 rounded-full !bg-panel !text-cream !shadow-none border border-border text-lg font-normal;
   }
   .mobile-nav-toggle:hover {
     @apply !bg-panel-2;
@@ -82,19 +94,26 @@
     @apply max-w-5xl;
   }
 
+  /* Static content container — no hover lift/glow here on purpose: a
+     card isn't clickable, so it shouldn't look like it is. Interactive
+     elements (buttons, links, the toggle switch) carry their own hover
+     feedback instead. */
   .card {
-    @apply relative bg-gradient-to-b from-panel to-panel-2 border border-border rounded-xl p-6 mb-7 shadow-xl shadow-black/40 transition-all hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-0.5 overflow-hidden;
+    @apply relative bg-gradient-to-b from-panel to-panel-2 border border-border rounded-xl p-6 mb-7 shadow-xl shadow-black/40 overflow-hidden;
   }
   .card::before {
     content: "";
     @apply absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-brand to-transparent opacity-70;
   }
   .card h2 {
-    @apply mt-0 mb-1 text-brand-bright text-xl font-semibold border-b border-border pb-3 flex items-center gap-2.5;
+    @apply mt-0 mb-3 text-brand-bright text-xl font-semibold border-b border-border pb-3 flex items-center gap-2.5;
   }
   .card h2::before {
     content: "";
     @apply w-1.5 h-1.5 rounded-full bg-brand shrink-0;
+  }
+  .card p {
+    @apply leading-relaxed mb-4 last:mb-0;
   }
   .card-banner {
     @apply -mx-6 -mt-6 mb-5 h-32 sm:h-40 overflow-hidden relative;
@@ -136,6 +155,9 @@
   .today-banner .pulse-dot {
     @apply w-2 h-2 rounded-full bg-red animate-pulse shrink-0;
   }
+  .today-banner-eyebrow.is-lunch .pulse-dot {
+    @apply bg-brand;
+  }
   .today-banner-title {
     @apply text-xl font-bold mt-1 truncate;
   }
@@ -148,7 +170,7 @@
     @apply list-none m-0 p-0;
   }
   .beer-row {
-    @apply flex justify-between items-start gap-4 py-4 border-b border-dashed border-border last:border-none transition-colors hover:bg-white/[.03] -mx-3 px-3 rounded-lg;
+    @apply flex justify-between items-baseline gap-4 py-4 border-b border-dashed border-border last:border-none transition-colors hover:bg-white/[.03] -mx-3 px-3 rounded-lg;
   }
   .beer-main {
     @apply flex items-start gap-3.5 min-w-0;
@@ -188,7 +210,7 @@
     @apply flex flex-col items-end gap-2 shrink-0;
   }
   .beer-price {
-    @apply font-sans font-bold text-brand-bright text-base tabular-nums;
+    @apply font-sans font-bold text-accent text-base tabular-nums;
   }
 
   .badge {
@@ -248,7 +270,7 @@
   form input,
   form select,
   form textarea {
-    @apply w-full py-2.5 px-3 bg-panel-2 border border-border rounded-md text-cream text-base font-serif;
+    @apply w-full py-2.5 px-3 min-h-[48px] bg-panel-2 border border-border rounded-md text-cream text-base font-serif;
   }
   form input:focus,
   form select:focus,
@@ -258,7 +280,7 @@
 
   .btn,
   button {
-    @apply inline-block bg-brand text-white border-none py-2.5 px-5 rounded-md text-sm font-bold cursor-pointer font-sans tracking-wide transition-all shadow shadow-brand/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-brand/30 no-underline;
+    @apply inline-block bg-brand text-bg border-none py-2.5 px-5 min-h-[48px] rounded-md text-sm font-bold cursor-pointer font-sans tracking-wide transition-all shadow shadow-brand/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-brand/30 no-underline;
   }
   .btn:hover,
   button:hover {
@@ -287,6 +309,11 @@
   .status-msg.info {
     @apply bg-brand/[.15] border border-brand/40 text-brand-bright;
   }
+  /* Alias used for connection/database-drop failures surfaced outside a
+     form (e.g. admin list mutations), same treatment as .status-msg.error. */
+  .status-error {
+    @apply mt-3.5 py-2.5 px-3.5 rounded-md text-sm font-sans bg-red/[.15] border border-red/40 text-[#e0897a];
+  }
 
   /* Events */
   .event-list {
@@ -298,8 +325,12 @@
   .event-grid {
     @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
   }
+  /* Each event card is a real link (→ Reserve a Table, pre-filled with
+     that date), so the hover lift/glow is honest here — unlike the
+     generic .card container, this one has exactly one click target. */
   .event-card {
-    @apply relative bg-panel-2 border border-border rounded-lg p-4 pl-5 transition-all hover:border-brand/40 hover:-translate-y-0.5;
+    @apply block relative bg-panel-2 border border-border rounded-lg p-4 pl-5 hover:border-brand/60 hover:-translate-y-1 cursor-pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
   }
   .event-card::before {
     content: "";
@@ -309,10 +340,38 @@
     @apply font-sans text-brand text-sm whitespace-nowrap;
   }
   .event-cover {
-    @apply font-sans text-muted text-xs mt-1;
+    @apply font-sans text-accent text-xs mt-1;
+  }
+
+  /* Categorical event tags: alpha-blended background, solid text. */
+  .event-tag {
+    @apply inline-flex items-center gap-1.5 text-xs py-1 px-2.5 rounded-full whitespace-nowrap font-sans font-semibold tracking-wide bg-red/[.18] text-[#e0897a] border border-red/40;
   }
 
   .empty-note {
+    @apply text-muted italic font-sans text-sm;
+  }
+
+  /* This week's calendar strip */
+  .week-list {
+    @apply list-none m-0 p-0;
+  }
+  .week-day {
+    @apply flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 py-3 border-b border-dashed border-border last:border-none;
+  }
+  .week-day.is-today .week-day-label {
+    @apply text-brand-bright;
+  }
+  .week-day-label {
+    @apply font-sans text-sm text-muted whitespace-nowrap sm:w-48 shrink-0;
+  }
+  .week-day-body {
+    @apply flex flex-col gap-1;
+  }
+  .week-day-event {
+    @apply text-cream no-underline font-semibold hover:text-brand-bright transition-colors;
+  }
+  .week-day-empty {
     @apply text-muted italic font-sans text-sm;
   }
 
@@ -332,10 +391,10 @@
   .status-pill.pending {
     @apply bg-brand/[.15] text-brand-bright border border-brand/40;
   }
-  .status-pill.approved {
-    @apply bg-green/[.18] text-[#8fc98f] border border-green/40;
+  .status-pill.reviewed {
+    @apply bg-[#5c7a8a]/[.18] text-[#9cc4d6] border border-[#5c7a8a]/40;
   }
-  .status-pill.archived {
-    @apply bg-muted/[.15] text-muted border border-muted/40;
+  .status-pill.booked {
+    @apply bg-green/[.18] text-[#8fc98f] border border-green/40;
   }
 }

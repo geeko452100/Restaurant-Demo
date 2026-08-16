@@ -5,25 +5,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Palette anchored to the real Rhythm & Brews logo (navy blue
-        // script, black bottle cap, red music-staff accent) rather than
-        // an invented amber taproom theme.
-        bg: "#0c0e13",
-        panel: "#151822",
-        "panel-2": "#1c202c",
+        // Warm charcoal "live music poster" palette: neon gold for
+        // headings/brand, sunset orange for prices/tags.
+        bg: "#121214",
+        panel: "#1e1e24",
+        "panel-2": "#25252c",
         brand: {
-          DEFAULT: "#1d3fc4",
-          bright: "#3d5eeb",
+          DEFAULT: "#f4b41a",
+          bright: "#ffc94d",
         },
-        cream: "#f3f5f9",
-        muted: "#98a1b5",
+        accent: "#e05314",
+        cream: "#f5f5f7",
+        muted: "#a0a0ab",
         red: "#c0392b",
         green: "#5c8a5c",
-        border: "#2a2f3d",
+        border: "#2a2a32",
       },
       fontFamily: {
         serif: ["Georgia", "Iowan Old Style", "serif"],
         sans: ["system-ui", "sans-serif"],
+        display: ["Oswald", "Impact", "Haettenschweiler", "Arial Narrow Bold", "sans-serif"],
       },
     },
   },
