@@ -25,6 +25,13 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function formatTime12h(hhmm) {
+  const [hour, minute] = hhmm.split(":").map(Number);
+  const period = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
+}
+
 async function loadWeek() {
   try {
     const res = await fetch("/api/events");
@@ -55,7 +62,7 @@ function renderWeek(events) {
             .map(
               (event) => `
                 <a class="week-day-event" href="reserve.html?date=${encodeURIComponent(iso)}">
-                  ${escapeHtml(event.title)}${event.startTime ? ` &middot; ${event.startTime}` : ""}
+                  ${escapeHtml(event.title)}${event.startTime ? ` &middot; ${formatTime12h(event.startTime)}` : ""}
                 </a>
               `
             )

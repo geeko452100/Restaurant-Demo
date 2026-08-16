@@ -31,7 +31,7 @@ function renderEvents(events) {
         <li>
           <span>${escapeHtml(event.title)}</span>
           <span class="flex items-center gap-2">
-            <span class="event-date">${event.eventDate}${event.startTime ? ` &middot; ${event.startTime}` : ""}</span>
+            <span class="event-date">${event.eventDate}${event.startTime ? ` &middot; ${formatTime12h(event.startTime)}` : ""}</span>
             <button type="button" class="secondary" data-edit-event="${event.id}">Edit</button>
             <button type="button" class="secondary" data-delete-event="${event.id}">Delete</button>
           </span>
@@ -52,6 +52,13 @@ function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str;
   return div.innerHTML;
+}
+
+function formatTime12h(hhmm) {
+  const [hour, minute] = hhmm.split(":").map(Number);
+  const period = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
 }
 
 function showStatus(message, type) {

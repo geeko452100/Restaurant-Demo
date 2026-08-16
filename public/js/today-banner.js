@@ -3,16 +3,18 @@
   if (!el) return;
 
   const LUNCH_START_HOUR = 11;
-  const LUNCH_END_HOUR = 14; // 2pm
-
-  function todayISO() {
-    return new Date().toISOString().slice(0, 10);
-  }
 
   function escapeHtml(str) {
     const div = document.createElement("div");
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  function formatTime12h(hhmm) {
+    const [hour, minute] = hhmm.split(":").map(Number);
+    const period = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
   }
 
   function render({ eyebrowClass, eyebrowText, title, meta, imageUrl, showPulse }) {
@@ -34,23 +36,21 @@
   }
 
   async function load() {
-    const now = new Date();
-    const dow = now.getDay();
-    const hour = now.getHours() + now.getMinutes() / 60;
-    const today = todayISO();
-
-    const [menuRes, eventsRes] = await Promise.all([
-      fetch("/api/menu").catch(() => null),
+    // Lunch-window and day-of-week logic live server-side in Central
+    // Time (GET /api/specials) so this banner is correct no matter what
+    // timezone the visitor's browser reports.
+    const [specialsRes, eventsRes] = await Promise.all([
+      fetch("/api/specials").catch(() => null),
       fetch("/api/events").catch(() => null),
     ]);
 
-    const menu = menuRes && menuRes.ok ? await menuRes.json() : [];
+    const specialsData =
+      specialsRes && specialsRes.ok
+        ? await specialsRes.json()
+        : { special: null, isLunchWindow: false, today: null };
     const events = eventsRes && eventsRes.ok ? await eventsRes.json() : [];
 
-    const isLunchWindow = hour >= LUNCH_START_HOUR && hour < LUNCH_END_HOUR;
-    const lunchItem = menu
-      .flatMap((category) => category.items)
-      .find((item) => item.dayOfWeek === dow && item.isAvailable);
+    const { special: lunchItem, isLunchWindow, today } = specialsData;
     const tonightsEvent = events.find((event) => event.eventDate === today);
 
     if (isLunchWindow && lunchItem) {
@@ -60,13 +60,13 @@
         title: lunchItem.name,
         meta: `${escapeHtml(lunchItem.description || "")} &middot; $${lunchItem.price.toFixed(2)}`,
         imageUrl: lunchItem.imageUrl,
-        showPulse: false,
+        showPulse: true,
       });
       return;
     }
 
     if (tonightsEvent) {
-      const timeLabel = tonightsEvent.startTime ? ` · ${tonightsEvent.startTime}` : "";
+      const timeLabel = tonightsEvent.startTime ? ` · ${formatTime12h(tonightsEvent.startTime)}` : "";
       const coverLabel = tonightsEvent.coverCharge > 0 ? `$${tonightsEvent.coverCharge.toFixed(2)} cover` : "No cover";
       render({
         eyebrowClass: "is-live",

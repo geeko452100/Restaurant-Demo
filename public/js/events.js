@@ -21,7 +21,7 @@ function renderEvents(events) {
   gridEl.innerHTML = events
     .map((event) => {
       const coverLabel = event.coverCharge > 0 ? `$${event.coverCharge.toFixed(2)} cover` : "No cover";
-      const timeLabel = event.startTime ? `${event.startTime} &middot; ` : "";
+      const timeLabel = event.startTime ? `${formatTime12h(event.startTime)} &middot; ` : "";
       return `
         <a class="event-card" href="reserve.html?date=${encodeURIComponent(event.eventDate)}" title="Reserve a table for ${escapeAttr(event.title)}">
           <div class="event-date">${formatDate(event.eventDate)}</div>
@@ -38,6 +38,13 @@ function formatDate(isoDate) {
   const [year, month, day] = isoDate.split("-").map(Number);
   const d = new Date(year, month - 1, day);
   return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+}
+
+function formatTime12h(hhmm) {
+  const [hour, minute] = hhmm.split(":").map(Number);
+  const period = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
 }
 
 function escapeHtml(str) {

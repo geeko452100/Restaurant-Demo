@@ -344,6 +344,13 @@ function formatReservationDate(iso: string) {
   return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
 }
 
+function formatTime12h(hhmm: string) {
+  const [hour, minute] = hhmm.split(":").map(Number);
+  const period = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
+}
+
 app.post("/api/reserve", async (c) => {
   const body = await c.req.json().catch(() => null);
   const parsed = reservationSchema.safeParse(body);
@@ -353,7 +360,7 @@ app.post("/api/reserve", async (c) => {
 
   const { name, phone, date, partySize, time } = parsed.data;
   const dateLabel = date === todayCentralISO() ? "today" : `on ${formatReservationDate(date)}`;
-  const message = `Your table at Rhythm & Brews is confirmed! Party of ${partySize} ${dateLabel} at ${time}. See you soon, ${name}!`;
+  const message = `Your table at Rhythm & Brews is confirmed! Party of ${partySize} ${dateLabel} at ${formatTime12h(time)}. See you soon, ${name}!`;
   const result = await sendReservationSms(c.env, phone, message);
 
   if (!result.sent && !result.stub) {
