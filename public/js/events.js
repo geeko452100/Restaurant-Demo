@@ -23,12 +23,12 @@ function renderEvents(events) {
       const coverLabel = event.coverCharge > 0 ? `$${event.coverCharge.toFixed(2)} cover` : "No cover";
       const timeLabel = event.startTime ? `${event.startTime} &middot; ` : "";
       return `
-        <div class="event-card">
+        <a class="event-card" href="reserve.html?date=${encodeURIComponent(event.eventDate)}" title="Reserve a table for ${escapeAttr(event.title)}">
           <div class="event-date">${formatDate(event.eventDate)}</div>
           <div class="beer-name">${escapeHtml(event.title)}</div>
           ${event.description ? `<p class="beer-style m-0 mt-1">${escapeHtml(event.description)}</p>` : ""}
           <div class="event-cover">${timeLabel}${coverLabel}</div>
-        </div>
+        </a>
       `;
     })
     .join("");
@@ -44,6 +44,10 @@ function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str;
   return div.innerHTML;
+}
+
+function escapeAttr(str) {
+  return escapeHtml(str).replace(/"/g, "&quot;");
 }
 
 function showStatus(message, type) {

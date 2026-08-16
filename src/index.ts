@@ -10,6 +10,7 @@ import {
   getBandApplications,
   getTodaysSpecial,
   nowCentral,
+  todayCentralISO,
 } from "./db/queries";
 import { bandApplications, bandApplicationStatus, events, menuCategories, menuItems } from "./db/schema";
 import { login, logout, isAuthenticated, requireAuth, checkLoginRateLimit } from "./lib/auth";
@@ -329,9 +330,19 @@ const reservationSchema = z.object({
     .string()
     .trim()
     .regex(/^\+?[0-9\s()-]{7,20}$/, "Enter a valid phone number"),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be an ISO-8601 date")
+    .refine((date) => date >= todayCentralISO(), "date can't be in the past"),
   partySize: z.coerce.number().int().min(1).max(20),
   time: z.string().regex(/^\d{2}:\d{2}$/, "time must be HH:MM"),
 });
+
+function formatReservationDate(iso: string) {
+  const [year, month, day] = iso.split("-").map(Number);
+  const d = new Date(Date.UTC(year, month - 1, day));
+  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+}
 
 app.post("/api/reserve", async (c) => {
   const body = await c.req.json().catch(() => null);
@@ -340,8 +351,9 @@ app.post("/api/reserve", async (c) => {
     return c.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, 400);
   }
 
-  const { name, phone, partySize, time } = parsed.data;
-  const message = `Your table at Rhythm & Brews is confirmed! Party of ${partySize} at ${time}. See you soon, ${name}!`;
+  const { name, phone, date, partySize, time } = parsed.data;
+  const dateLabel = date === todayCentralISO() ? "today" : `on ${formatReservationDate(date)}`;
+  const message = `Your table at Rhythm & Brews is confirmed! Party of ${partySize} ${dateLabel} at ${time}. See you soon, ${name}!`;
   const result = await sendReservationSms(c.env, phone, message);
 
   if (!result.sent && !result.stub) {
