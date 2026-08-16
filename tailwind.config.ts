@@ -5,21 +5,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Warm charcoal "live music poster" palette: neon gold for
-        // headings/brand, sunset orange for prices/tags.
-        bg: "#121214",
-        panel: "#1e1e24",
-        "panel-2": "#25252c",
+        // Logo-matched palette: navy blue cards on a creamy beige
+        // ground, standard navy nav, gold for brand accents.
+        bg: "#f2e9d8",
+        panel: "#1c2a4e",
+        "panel-2": "#152140",
         brand: {
           DEFAULT: "#f4b41a",
           bright: "#ffc94d",
         },
         accent: "#e05314",
-        cream: "#f5f5f7",
-        muted: "#a0a0ab",
+        cream: "#f5f0e4",
+        muted: "#a9b4cf",
         red: "#c0392b",
         green: "#5c8a5c",
-        border: "#2a2a32",
+        border: "#2f3f6b",
+        navy: {
+          DEFAULT: "#1c2a4e",
+          dark: "#152140",
+        },
       },
       fontFamily: {
         serif: ["Georgia", "Iowan Old Style", "serif"],

@@ -7,10 +7,10 @@
     font-size: 18px;
   }
   body {
-    @apply m-0 min-h-screen bg-bg text-cream font-serif;
+    @apply m-0 min-h-screen bg-bg text-navy font-serif;
     background-image:
-      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(244, 180, 26, 0.1), transparent 60%),
-      radial-gradient(ellipse 700px 400px at 100% 20%, rgba(224, 83, 20, 0.06), transparent 60%);
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(28, 42, 78, 0.06), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 100% 20%, rgba(224, 83, 20, 0.05), transparent 60%);
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
@@ -34,12 +34,12 @@
 @layer components {
   /* Demo disclaimer: this is a design concept, not the real business's site. */
   .demo-disclaimer {
-    @apply block text-center bg-red/15 border-b border-red/40 text-cream/90 font-sans text-xs sm:text-sm tracking-wide py-2 px-3;
+    @apply block text-center bg-red border-b border-red/40 text-cream font-sans text-xs sm:text-sm tracking-wide py-2 px-3;
   }
 
   /* Topbar: logo far left, nav links right (desktop) / hamburger right (mobile) */
   .topbar {
-    @apply flex items-center justify-between gap-4 px-5 py-4 border-b border-border sticky top-0 z-20 bg-bg/95 backdrop-blur-[10px];
+    @apply flex items-center justify-between gap-4 px-5 py-4 border-b border-border sticky top-0 z-20 bg-navy/95 backdrop-blur-[10px];
   }
   .topbar-logo {
     @apply shrink-0 leading-none;
@@ -94,7 +94,7 @@
     @apply !bg-panel-2;
   }
   .mobile-nav-panel {
-    @apply hidden md:!hidden flex-col items-center gap-1 py-3 border-b border-border bg-bg z-20;
+    @apply hidden md:!hidden flex-col items-center gap-1 py-3 border-b border-border bg-navy z-20;
   }
   .mobile-nav-panel.show {
     @apply flex;
@@ -107,14 +107,14 @@
   }
 
   .admin-banner {
-    @apply text-center bg-brand/10 border-b border-border text-brand-bright py-2 font-sans text-sm tracking-widest;
+    @apply text-center bg-navy border-b border-border text-brand-bright py-2 font-sans text-sm tracking-widest;
   }
 
   .site-footer {
     @apply mt-12 py-6 border-t border-border text-center;
   }
   .site-footer a {
-    @apply font-sans text-xs text-muted no-underline tracking-wide hover:text-brand-bright;
+    @apply font-sans text-xs text-navy/70 no-underline tracking-wide hover:text-accent;
   }
 
   /* Layout */
@@ -130,7 +130,7 @@
      elements (buttons, links, the toggle switch) carry their own hover
      feedback instead. */
   .card {
-    @apply relative bg-gradient-to-b from-panel to-panel-2 border border-border rounded-xl p-6 mb-5 shadow-xl shadow-black/40 overflow-hidden;
+    @apply relative bg-gradient-to-b from-panel to-panel-2 border border-border rounded-xl p-6 mb-5 shadow-xl shadow-black/40 overflow-hidden text-cream;
   }
   .card::before {
     content: "";
@@ -160,7 +160,7 @@
   /* "Today" banner: today's lunch special, tonight's event, or a
      no-event fallback — whichever applies right now. */
   .today-banner {
-    @apply max-w-3xl mx-5 sm:mx-auto mt-4 rounded-2xl border border-border bg-gradient-to-br from-panel to-panel-2 overflow-hidden flex items-stretch shadow-xl shadow-black/40;
+    @apply max-w-3xl mx-5 sm:mx-auto mt-4 rounded-2xl border border-border bg-gradient-to-br from-panel to-panel-2 overflow-hidden flex items-stretch shadow-xl shadow-black/40 text-cream;
   }
   .today-banner-media {
     @apply w-28 sm:w-40 shrink-0 bg-panel-2;
