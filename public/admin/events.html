@@ -32,8 +32,9 @@
 
 <main>
   <section class="card">
-    <h2>Add a Show</h2>
+    <h2 id="event-form-title">Add a Show</h2>
     <form id="event-form">
+      <input type="hidden" id="eventId" name="eventId" />
       <div class="field">
         <label for="title">Event title</label>
         <input type="text" id="title" name="title" placeholder="e.g. The Copper Tones" required />
@@ -50,7 +51,8 @@
         <label for="coverCharge">Cover charge ($)</label>
         <input type="number" id="coverCharge" name="coverCharge" min="0" step="0.5" value="0" />
       </div>
-      <button type="submit">Add to Calendar</button>
+      <button type="submit" id="event-form-submit">Add to Calendar</button>
+      <button type="button" id="event-form-cancel" class="secondary hidden">Cancel Edit</button>
       <div class="status-msg" id="event-status"></div>
     </form>
   </section>

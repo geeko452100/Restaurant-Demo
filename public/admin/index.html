@@ -30,8 +30,89 @@
   <a href="bands.html">Band Inbox</a>
 </div>
 
-<main>
-  <p class="empty-note mb-5">Flip a switch to mark an item sold out. The public menu updates on its next poll.</p>
+<main class="wide">
+  <p class="empty-note mb-5">Flip a switch to 86 an item, or use Edit/Delete for full control. The public menu updates on its next poll.</p>
+  <div class="status-msg" id="menu-status"></div>
+
+  <section class="card">
+    <h2 id="item-form-title">Add a Menu Item</h2>
+    <form id="item-form">
+      <input type="hidden" id="itemId" name="itemId" />
+      <div class="field">
+        <label for="itemCategoryId">Category</label>
+        <select id="itemCategoryId" name="categoryId" required></select>
+      </div>
+      <div class="field">
+        <label for="itemName">Name</label>
+        <input type="text" id="itemName" name="name" required />
+      </div>
+      <div class="field">
+        <label for="itemDescription">Description</label>
+        <input type="text" id="itemDescription" name="description" />
+      </div>
+      <div class="field">
+        <label for="itemPrice">Price ($)</label>
+        <input type="number" id="itemPrice" name="price" min="0" step="0.01" required />
+      </div>
+      <div class="field">
+        <label for="itemAbv">ABV % (drinks only, leave blank for food)</label>
+        <input type="number" id="itemAbv" name="abv" min="0" max="100" step="0.1" />
+      </div>
+      <div class="field">
+        <label for="itemImageUrl">Image URL</label>
+        <input type="url" id="itemImageUrl" name="imageUrl" />
+      </div>
+      <div class="field">
+        <label for="itemDayOfWeek">Lunch special day (leave blank for regular items)</label>
+        <select id="itemDayOfWeek" name="dayOfWeek">
+          <option value="">Not a daily special</option>
+          <option value="0">Sunday</option>
+          <option value="1">Monday</option>
+          <option value="2">Tuesday</option>
+          <option value="3">Wednesday</option>
+          <option value="4">Thursday</option>
+          <option value="5">Friday</option>
+          <option value="6">Saturday</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="itemServings">Servings remaining (drinks only, leave blank to not auto-decrement)</label>
+        <input type="number" id="itemServings" name="servingsRemaining" min="0" step="1" />
+      </div>
+      <div class="field flex items-center gap-2">
+        <input type="checkbox" id="itemIsLocal" name="isLocal" style="width:auto;min-height:0;" />
+        <label for="itemIsLocal" class="m-0">Local brew</label>
+      </div>
+      <div class="field flex items-center gap-2">
+        <input type="checkbox" id="itemIsGlutenFree" name="isGlutenFree" style="width:auto;min-height:0;" />
+        <label for="itemIsGlutenFree" class="m-0">Gluten-free</label>
+      </div>
+      <button type="submit" id="item-form-submit">Add Item</button>
+      <button type="button" id="item-form-cancel" class="secondary hidden">Cancel Edit</button>
+      <div class="status-msg" id="item-form-status"></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Add a Category</h2>
+    <form id="category-form">
+      <div class="field">
+        <label for="categoryName">Name</label>
+        <input type="text" id="categoryName" name="name" required />
+      </div>
+      <div class="field">
+        <label for="categoryDisplayOrder">Display order</label>
+        <input type="number" id="categoryDisplayOrder" name="displayOrder" min="0" step="1" value="0" />
+      </div>
+      <div class="field">
+        <label for="categoryImageUrl">Banner image URL</label>
+        <input type="url" id="categoryImageUrl" name="imageUrl" />
+      </div>
+      <button type="submit">Add Category</button>
+      <div class="status-msg" id="category-form-status"></div>
+    </form>
+  </section>
+
   <div id="menu-root">
     <p class="empty-note">Loading menu...</p>
   </div>
