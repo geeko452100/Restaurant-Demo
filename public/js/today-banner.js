@@ -97,7 +97,7 @@
       eyebrowText: "NO EVENT TONIGHT",
       title: "No schedule, no cover, just good times",
       meta: "Pool, darts, and the jukebox are always on.",
-      imageUrl: "/assets/pool_table.webp",
+      imageUrl: "/assets/png/pool_table.png",
       showPulse: false,
     });
   }

@@ -14,7 +14,10 @@
 <div class="demo-disclaimer">Interactive Website Concept created by Prairie Web Studio. This is an independent design proposal and is not the official website for Rhythm &amp; Brews.</div>
 <header class="topbar">
   <a href="/" class="topbar-logo">
-    <img src="assets/rhythm_brews.webp" alt="Rhythm & Brews" />
+    <picture>
+      <source srcset="assets/avif/logo.avif" type="image/avif">
+      <img src="assets/png/logo.png" alt="Rhythm & Brews" width="500" height="500" loading="eager" />
+    </picture>
   </a>
   <nav class="site-nav">
     <a href="/burgers">Burgers</a>
@@ -35,7 +38,7 @@
   <a href="/reserve">Reserve a Table</a>
 </div>
 
-<section class="hero" style="background-image: linear-gradient(to bottom, rgba(18,18,20,.55), rgba(18,18,20,.9)), url('assets/drink.webp');">
+<section class="hero" style="background-image: linear-gradient(to bottom, rgba(18,18,20,.55), rgba(18,18,20,.9)), url('assets/png/drink.png'); background-image: linear-gradient(to bottom, rgba(18,18,20,.55), rgba(18,18,20,.9)), image-set(url('assets/avif/drink.avif') type('image/avif'), url('assets/png/drink.png') type('image/png'));">
   <div class="hero-content">
     <p class="hero-eyebrow">Drinks</p>
     <h1 class="hero-title">On Tap &amp; In the Glass</h1>
