@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-size: 18px;
+  }
   body {
     @apply m-0 min-h-screen bg-bg text-cream font-serif;
     background-image:
@@ -45,7 +48,28 @@
     @apply w-11 h-11 rounded-lg bg-white p-1 object-contain block;
   }
   .header-actions {
-    @apply mt-5 flex justify-center gap-3 flex-wrap;
+    @apply mt-4 flex justify-center gap-3 flex-wrap;
+  }
+
+  /* Full-bleed homepage hero — background image set inline per-page so
+     each page can use its own photo without a new utility class. */
+  .hero {
+    @apply relative flex items-center justify-center text-center px-5 py-20 sm:py-28 bg-cover bg-center;
+  }
+  .hero-content {
+    @apply relative max-w-2xl;
+  }
+  .hero-eyebrow {
+    @apply font-sans text-sm tracking-[0.2em] uppercase text-brand-bright mb-3;
+  }
+  .hero-title {
+    @apply font-display text-5xl sm:text-6xl text-cream mb-4 tracking-normal leading-none;
+  }
+  .hero-subtitle {
+    @apply font-serif text-lg text-cream/90 leading-relaxed mb-6 max-w-xl mx-auto;
+  }
+  .hero .header-actions {
+    @apply mt-0;
   }
 
   .site-nav {
@@ -86,9 +110,16 @@
     @apply text-center bg-brand/10 border-b border-border text-brand-bright py-2 font-sans text-sm tracking-widest;
   }
 
+  .site-footer {
+    @apply mt-12 py-6 border-t border-border text-center;
+  }
+  .site-footer a {
+    @apply font-sans text-xs text-muted no-underline tracking-wide hover:text-brand-bright;
+  }
+
   /* Layout */
   main {
-    @apply max-w-3xl mx-auto py-8 px-5 pb-16;
+    @apply max-w-3xl mx-auto py-6 px-5 pb-10;
   }
   main.wide {
     @apply max-w-5xl;
@@ -99,14 +130,14 @@
      elements (buttons, links, the toggle switch) carry their own hover
      feedback instead. */
   .card {
-    @apply relative bg-gradient-to-b from-panel to-panel-2 border border-border rounded-xl p-6 mb-7 shadow-xl shadow-black/40 overflow-hidden;
+    @apply relative bg-gradient-to-b from-panel to-panel-2 border border-border rounded-xl p-6 mb-5 shadow-xl shadow-black/40 overflow-hidden;
   }
   .card::before {
     content: "";
     @apply absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-brand to-transparent opacity-70;
   }
   .card h2 {
-    @apply mt-0 mb-3 text-brand-bright text-xl font-semibold border-b border-border pb-3 flex items-center gap-2.5;
+    @apply mt-0 mb-3 text-brand-bright text-2xl font-semibold border-b border-border pb-3 flex items-center gap-2.5;
   }
   .card h2::before {
     content: "";
@@ -129,7 +160,7 @@
   /* "Today" banner: today's lunch special, tonight's event, or a
      no-event fallback — whichever applies right now. */
   .today-banner {
-    @apply max-w-3xl mx-5 sm:mx-auto mt-6 rounded-2xl border border-border bg-gradient-to-br from-panel to-panel-2 overflow-hidden flex items-stretch shadow-xl shadow-black/40;
+    @apply max-w-3xl mx-5 sm:mx-auto mt-4 rounded-2xl border border-border bg-gradient-to-br from-panel to-panel-2 overflow-hidden flex items-stretch shadow-xl shadow-black/40;
   }
   .today-banner-media {
     @apply w-28 sm:w-40 shrink-0 bg-panel-2;
@@ -159,7 +190,7 @@
     @apply bg-brand;
   }
   .today-banner-title {
-    @apply text-xl font-bold mt-1 truncate;
+    @apply text-2xl font-bold mt-1 truncate;
   }
   .today-banner-meta {
     @apply text-muted text-sm mt-1 font-sans;
@@ -170,7 +201,7 @@
     @apply list-none m-0 p-0;
   }
   .beer-row {
-    @apply flex justify-between items-baseline gap-4 py-4 border-b border-dashed border-border last:border-none transition-colors hover:bg-white/[.03] -mx-3 px-3 rounded-lg;
+    @apply flex justify-between items-baseline gap-4 py-3 border-b border-dashed border-border last:border-none transition-colors hover:bg-white/[.03] -mx-3 px-3 rounded-lg;
   }
   .beer-main {
     @apply flex items-start gap-3.5 min-w-0;
@@ -191,7 +222,7 @@
     @apply min-w-0;
   }
   .beer-info .beer-name {
-    @apply text-base font-bold tracking-wide;
+    @apply text-lg font-bold tracking-wide;
   }
   .beer-info .beer-style {
     @apply text-muted text-sm mt-0.5;
@@ -262,7 +293,7 @@
 
   /* Forms */
   form .field {
-    @apply mb-4;
+    @apply mb-3;
   }
   form label {
     @apply block mb-1.5 text-sm text-muted font-sans;
@@ -280,7 +311,7 @@
 
   .btn,
   button {
-    @apply inline-block bg-brand text-bg border-none py-2.5 px-5 min-h-[48px] rounded-md text-sm font-bold cursor-pointer font-sans tracking-wide transition-all shadow shadow-brand/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-brand/30 no-underline;
+    @apply inline-block bg-brand text-bg border-none py-2.5 px-5 min-h-[48px] rounded-md text-base font-bold cursor-pointer font-sans tracking-wide transition-all shadow shadow-brand/20 hover:-translate-y-0.5 hover:shadow-md hover:shadow-brand/30 no-underline;
   }
   .btn:hover,
   button:hover {
