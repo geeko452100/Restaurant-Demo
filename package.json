@@ -1,0 +1,34 @@
+{
+  "name": "rhythm-and-brews-demo",
+  "version": "3.0.0",
+  "description": "Rhythm & Brews demo: Cloudflare Worker (Hono) + Drizzle ORM on D1, static Tailwind frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build:css": "tailwindcss -i ./src/input.css -o ./public/css/style.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./public/css/style.css --watch",
+    "deploy": "npm run build:css && wrangler deploy",
+    "cf-typegen": "wrangler types",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply rhythm-and-brews-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply rhythm-and-brews-db --remote",
+    "db:seed:local": "wrangler d1 execute rhythm-and-brews-db --local --file=./src/db/seed.sql",
+    "db:seed:remote": "wrangler d1 execute rhythm-and-brews-db --remote --file=./src/db/seed.sql",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.6.14",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "autoprefixer": "^10.4.20",
+    "drizzle-kit": "^0.31.10",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.7.3",
+    "wrangler": "^4.123.0"
+  }
+}

@@ -1,0 +1,16 @@
+node_modules/
+.env
+.env*.local
+.dev.vars
+TO_DO.md
+TO-DO-ver-2.md
+
+# Build output
+public/css/style.css
+
+# Cloudflare
+.wrangler/
+worker-configuration.d.ts
+
+# Drizzle
+drizzle/migrations/meta/

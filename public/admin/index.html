@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rhythm & Brews - Admin</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="admin-guard-hidden">
+<div class="admin-banner">ADMIN &middot; INVENTORY</div>
+<header class="topbar">
+  <a href="../index.html" class="topbar-logo">
+    <img src="../assets/logo.jpg" alt="Rhythm & Brews" />
+  </a>
+  <nav class="site-nav">
+    <a href="index.html" class="active">Keg Toggle</a>
+    <a href="events.html">Events</a>
+    <a href="bands.html">Band Inbox</a>
+  </nav>
+  <div class="flex items-center gap-2">
+    <button type="button" id="logout-btn" class="ghost-btn">Sign Out</button>
+    <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+<div class="mobile-nav-panel">
+  <a href="index.html">Keg Toggle</a>
+  <a href="events.html">Events</a>
+  <a href="bands.html">Band Inbox</a>
+</div>
+
+<main>
+  <p class="empty-note mb-5">Flip a switch to mark an item sold out. The public menu updates on its next poll.</p>
+  <div id="menu-root">
+    <p class="empty-note">Loading menu...</p>
+  </div>
+</main>
+
+<script src="../js/nav.js"></script>
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-menu.js"></script>
+</body>
+</html>

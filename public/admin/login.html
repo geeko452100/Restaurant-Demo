@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rhythm & Brews - Owner Login</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a href="../index.html" class="topbar-logo">
+    <img src="../assets/logo.jpg" alt="Rhythm & Brews" />
+  </a>
+  <a href="../index.html" class="ghost-btn">Back to Site</a>
+</header>
+
+<main>
+  <section class="card">
+    <h2>Sign In</h2>
+    <form id="login-form">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <button type="submit">Sign In</button>
+      <div class="status-msg" id="login-status"></div>
+    </form>
+  </section>
+</main>
+
+<script src="../js/admin-login.js"></script>
+</body>
+</html>

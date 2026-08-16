@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rhythm & Brews - Reserve</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <img src="assets/logo.jpg" alt="Rhythm & Brews" />
+  </a>
+  <nav class="site-nav">
+    <a href="menu.html">Menu</a>
+    <a href="events.html">Events</a>
+    <a href="reserve.html" class="active">Reserve a Table</a>
+  </nav>
+  <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+</header>
+<div class="mobile-nav-panel">
+  <a href="menu.html">Menu</a>
+  <a href="events.html">Events</a>
+  <a href="reserve.html">Reserve a Table</a>
+</div>
+
+<main>
+  <section class="card">
+    <h2>Reserve a Table</h2>
+    <p class="empty-note">Enter your own cell number to see the instant text confirmation.</p>
+    <form id="reserve-form">
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+      <div class="field">
+        <label for="phone">Cell phone number</label>
+        <input type="tel" id="phone" name="phone" placeholder="+15551234567" required />
+      </div>
+      <div class="field">
+        <label for="partySize">Party size</label>
+        <select id="partySize" name="partySize" required>
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="time">Time</label>
+        <input type="time" id="time" name="time" required />
+      </div>
+      <button type="submit">Confirm Reservation</button>
+      <div class="status-msg" id="reserve-status"></div>
+    </form>
+  </section>
+</main>
+
+<script src="js/nav.js"></script>
+<script src="js/reserve.js"></script>
+</body>
+</html>

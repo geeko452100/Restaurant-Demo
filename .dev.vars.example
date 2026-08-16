@@ -1,0 +1,25 @@
+# Local dev secrets for `next dev` / `wrangler dev` (via @opennextjs/cloudflare).
+# Copy to `.dev.vars` (gitignored) and fill in. In production these are set
+# with `wrangler secret put <NAME>` instead of committed anywhere.
+
+# Owner login for /admin (NextAuth Credentials provider).
+ADMIN_USERNAME=owner
+# sha256 hex digest of the admin password, e.g.
+# printf '%s' 'your-password' | sha256sum
+ADMIN_PASSWORD_HASH=
+AUTH_SECRET=
+
+# Veriphone (https://veriphone.io) - looks up a reservation phone number's
+# carrier so the confirmation can be emailed to that carrier's SMS gateway
+# (e.g. 5551234567@txt.att.net), avoiding A2P 10DLC registration. Falls
+# back to a console-logged stub when unset.
+VERIPHONE_API_KEY=
+
+# Resend (https://resend.com) - sends the reservation gateway "text" and
+# notifies the owner of new band applications. Falls back to a
+# console-logged stub when unset. RESEND_FROM_EMAIL must be on a domain
+# you've verified in your Resend account (https://resend.com/domains) -
+# a live domain is required before this will actually send anything.
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=
+OWNER_NOTIFICATION_EMAIL=

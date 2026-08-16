@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rhythm & Brews - Admin Events</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="admin-guard-hidden">
+<div class="admin-banner">ADMIN &middot; EVENT DEPLOYMENT</div>
+<header class="topbar">
+  <a href="../index.html" class="topbar-logo">
+    <img src="../assets/logo.jpg" alt="Rhythm & Brews" />
+  </a>
+  <nav class="site-nav">
+    <a href="index.html">Keg Toggle</a>
+    <a href="events.html" class="active">Events</a>
+    <a href="bands.html">Band Inbox</a>
+  </nav>
+  <div class="flex items-center gap-2">
+    <button type="button" id="logout-btn" class="ghost-btn">Sign Out</button>
+    <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+<div class="mobile-nav-panel">
+  <a href="index.html">Keg Toggle</a>
+  <a href="events.html">Events</a>
+  <a href="bands.html">Band Inbox</a>
+</div>
+
+<main>
+  <section class="card">
+    <h2>Add a Show</h2>
+    <form id="event-form">
+      <div class="field">
+        <label for="title">Event title</label>
+        <input type="text" id="title" name="title" placeholder="e.g. The Copper Tones" required />
+      </div>
+      <div class="field">
+        <label for="eventDate">Date</label>
+        <input type="date" id="eventDate" name="eventDate" required />
+      </div>
+      <div class="field">
+        <label for="startTime">Start time</label>
+        <input type="time" id="startTime" name="startTime" />
+      </div>
+      <div class="field">
+        <label for="coverCharge">Cover charge ($)</label>
+        <input type="number" id="coverCharge" name="coverCharge" min="0" step="0.5" value="0" />
+      </div>
+      <button type="submit">Add to Calendar</button>
+      <div class="status-msg" id="event-status"></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Upcoming Shows</h2>
+    <ul class="event-list" id="event-list">
+      <li class="empty-note">Loading events...</li>
+    </ul>
+  </section>
+</main>
+
+<script src="../js/nav.js"></script>
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-events.js"></script>
+</body>
+</html>

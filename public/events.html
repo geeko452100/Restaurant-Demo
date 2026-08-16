@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rhythm & Brews - Events</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <img src="assets/logo.jpg" alt="Rhythm & Brews" />
+  </a>
+  <nav class="site-nav">
+    <a href="menu.html">Menu</a>
+    <a href="events.html" class="active">Events</a>
+    <a href="reserve.html">Reserve a Table</a>
+  </nav>
+  <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+</header>
+<div class="mobile-nav-panel">
+  <a href="menu.html">Menu</a>
+  <a href="events.html">Events</a>
+  <a href="reserve.html">Reserve a Table</a>
+</div>
+
+<main class="wide">
+  <section class="card">
+    <h2>Upcoming Shows</h2>
+    <div class="event-grid" id="event-grid">
+      <p class="empty-note">Loading events...</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Want to Play Here?</h2>
+    <p class="empty-note">Send us your act and we&apos;ll be in touch about booking a night.</p>
+    <form id="band-form">
+      <div class="field">
+        <label for="bandName">Band name</label>
+        <input type="text" id="bandName" name="bandName" required />
+      </div>
+      <div class="field">
+        <label for="genre">Genre</label>
+        <input type="text" id="genre" name="genre" placeholder="e.g. Indie rock" required />
+      </div>
+      <div class="field">
+        <label for="rate">Requested rate ($, optional)</label>
+        <input type="number" id="rate" name="rate" min="0" step="1" />
+      </div>
+      <div class="field">
+        <label for="email">Contact email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="field">
+        <label for="mediaLink">Spotify or YouTube link</label>
+        <input type="url" id="mediaLink" name="mediaLink" placeholder="https://open.spotify.com/artist/..." required />
+      </div>
+      <button type="submit">Apply to Play</button>
+      <div class="status-msg" id="band-status"></div>
+    </form>
+  </section>
+</main>
+
+<script src="js/nav.js"></script>
+<script src="js/events.js"></script>
+</body>
+</html>

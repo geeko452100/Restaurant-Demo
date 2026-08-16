@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rhythm & Brews - Band Applications</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="admin-guard-hidden">
+<div class="admin-banner">ADMIN &middot; BAND APPLICATIONS</div>
+<header class="topbar">
+  <a href="../index.html" class="topbar-logo">
+    <img src="../assets/logo.jpg" alt="Rhythm & Brews" />
+  </a>
+  <nav class="site-nav">
+    <a href="index.html">Keg Toggle</a>
+    <a href="events.html">Events</a>
+    <a href="bands.html" class="active">Band Inbox</a>
+  </nav>
+  <div class="flex items-center gap-2">
+    <button type="button" id="logout-btn" class="ghost-btn">Sign Out</button>
+    <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+<div class="mobile-nav-panel">
+  <a href="index.html">Keg Toggle</a>
+  <a href="events.html">Events</a>
+  <a href="bands.html">Band Inbox</a>
+</div>
+
+<main class="wide">
+  <section class="card">
+    <h2>Band Application Inbox</h2>
+    <div class="overflow-x-auto">
+      <table class="admin-table" id="band-table">
+        <thead>
+          <tr>
+            <th>Band</th>
+            <th>Genre</th>
+            <th>Rate</th>
+            <th>Contact</th>
+            <th>Media</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="band-table-body">
+          <tr><td colspan="7" class="empty-note">Loading applications...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="../js/nav.js"></script>
+<script src="../js/admin-guard.js"></script>
+<script src="../js/admin-bands.js"></script>
+</body>
+</html>

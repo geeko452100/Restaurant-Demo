@@ -1,0 +1,20 @@
+name = "rhythm-and-brews-demo"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./public"
+# The Worker only needs to run for /api/*; every other request that
+# matches a static file is served directly by Cloudflare's asset layer.
+not_found_handling = "404-page"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "rhythm-and-brews-db"
+# Replace with the ID printed by `wrangler d1 create rhythm-and-brews-db`.
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "drizzle/migrations"
+
+[observability]
+enabled = true
