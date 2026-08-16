@@ -13,25 +13,57 @@
 <body>
 <div class="demo-disclaimer">Interactive Website Concept created by Prairie Web Studio. This is an independent design proposal and is not the official website for Rhythm &amp; Brews.</div>
 <header class="topbar">
-  <a href="index.html" class="topbar-logo">
-    <img src="assets/logo.webp" alt="Rhythm & Brews" />
+  <a href="/" class="topbar-logo">
+    <img src="assets/rhythm_brews.webp" alt="Rhythm & Brews" />
   </a>
   <nav class="site-nav">
-    <a href="menu.html">Menu</a>
-    <a href="events.html" class="active">Events</a>
-    <a href="calendar.html">Calendar</a>
-    <a href="reserve.html">Reserve a Table</a>
+    <a href="/burgers">Burgers</a>
+    <a href="/appetizers">Appetizers</a>
+    <a href="/drinks">Drinks</a>
+    <a href="/events" class="active">Events</a>
+    <a href="/calendar">Calendar</a>
+    <a href="/reserve">Reserve a Table</a>
   </nav>
   <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
 </header>
 <div class="mobile-nav-panel">
-  <a href="menu.html">Menu</a>
-  <a href="events.html">Events</a>
-  <a href="calendar.html">Calendar</a>
-  <a href="reserve.html">Reserve a Table</a>
+  <a href="/burgers">Burgers</a>
+  <a href="/appetizers">Appetizers</a>
+  <a href="/drinks">Drinks</a>
+  <a href="/events">Events</a>
+  <a href="/calendar">Calendar</a>
+  <a href="/reserve">Reserve a Table</a>
 </div>
 
+<section class="hero" id="special-events-hero" style="background-image: linear-gradient(to bottom, rgba(18,18,20,.55), rgba(18,18,20,.9)), url('assets/karaoke.webp');">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Special Events</p>
+    <h1 class="hero-title" id="special-events-title">Loading&hellip;</h1>
+    <p class="hero-subtitle" id="special-events-subtitle"></p>
+    <div class="header-actions">
+      <a href="/calendar" class="btn">See Full Calendar</a>
+      <a href="/reserve" class="btn secondary">Reserve a Table</a>
+    </div>
+  </div>
+</section>
+
 <main class="wide">
+  <section class="card">
+    <h2>Live Music Schedule</h2>
+    <div class="event-grid">
+      <div class="event-card" style="cursor: default;">
+        <div class="event-date">Friday Nights</div>
+        <div class="beer-name">Local Acoustic &amp; Regional Rock</div>
+        <p class="beer-style m-0 mt-1">Local acoustic artists and regional rock bands. Typically starting at 8:00 PM.</p>
+      </div>
+      <div class="event-card" style="cursor: default;">
+        <div class="event-date">Saturday Nights</div>
+        <div class="beer-name">Full Band Showcase</div>
+        <p class="beer-style m-0 mt-1">Full band performances, country showcases, and high-energy cover acts.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="card">
     <h2>Upcoming Shows</h2>
     <div class="event-grid" id="event-grid">

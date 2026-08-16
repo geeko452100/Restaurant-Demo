@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Rhythm & Brews - Reserve</title>
+<title>Rhythm & Brews - Drinks</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -22,7 +22,7 @@
     <a href="/drinks">Drinks</a>
     <a href="/events">Events</a>
     <a href="/calendar">Calendar</a>
-    <a href="/reserve" class="active">Reserve a Table</a>
+    <a href="/reserve">Reserve a Table</a>
   </nav>
   <button type="button" class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
 </header>
@@ -35,49 +35,21 @@
   <a href="/reserve">Reserve a Table</a>
 </div>
 
-<main>
-  <section class="card">
-    <h2>Reserve a Table</h2>
-    <p class="empty-note">Enter your own cell number to see the instant text confirmation.</p>
-    <form id="reserve-form">
-      <div class="field">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required />
-      </div>
-      <div class="field">
-        <label for="phone">Cell phone number</label>
-        <input type="tel" id="phone" name="phone" placeholder="+15551234567" required />
-      </div>
-      <div class="field">
-        <label for="date">Date</label>
-        <input type="date" id="date" name="date" required />
-      </div>
-      <div class="field">
-        <label for="partySize">Party size</label>
-        <select id="partySize" name="partySize" required>
-          <option value="1">1</option>
-          <option value="2" selected>2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8+</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="time">Time</label>
-        <input type="time" id="time" name="time" required />
-      </div>
-      <button type="submit">Confirm Reservation</button>
-      <div class="status-msg" id="reserve-status"></div>
-    </form>
-  </section>
+<section class="hero" style="background-image: linear-gradient(to bottom, rgba(18,18,20,.55), rgba(18,18,20,.9)), url('assets/drink.webp');">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Drinks</p>
+    <h1 class="hero-title">On Tap &amp; In the Glass</h1>
+    <p class="hero-subtitle">Draft and bottled beer, house cocktails, and non-alcoholic options.</p>
+  </div>
+</section>
+
+<main id="menu-root" data-section="drinks">
+  <p class="empty-note">Loading menu...</p>
 </main>
 
 <footer class="site-footer"><a href="admin/login.html">Staff Login</a></footer>
 
 <script src="js/nav.js"></script>
-<script src="js/reserve.js"></script>
+<script src="js/menu-section.js"></script>
 </body>
 </html>

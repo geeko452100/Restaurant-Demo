@@ -3,7 +3,7 @@ node_modules/
 .env*.local
 .dev.vars
 TO_DO.md
-TO-DO-ver-2.md
+MENU.md
 
 # Build output
 public/css/style.css

@@ -1,15 +1,35 @@
 const gridEl = document.getElementById("event-grid");
 const formEl = document.getElementById("band-form");
 const statusEl = document.getElementById("band-status");
+const heroTitleEl = document.getElementById("special-events-title");
+const heroSubtitleEl = document.getElementById("special-events-subtitle");
 
 async function loadEvents() {
   try {
     const res = await fetch("/api/events");
     const events = await res.json();
     renderEvents(events);
+    renderHero(events);
   } catch {
     gridEl.innerHTML = `<p class="empty-note">Couldn't load events right now.</p>`;
+    renderHero([]);
   }
+}
+
+function renderHero(events) {
+  if (!heroTitleEl || !heroSubtitleEl) return;
+
+  const next = events[0];
+  if (!next) {
+    heroTitleEl.textContent = "More Special Events Coming Soon";
+    heroSubtitleEl.textContent = "Check back soon, or see our regular Friday and Saturday night lineup below.";
+    return;
+  }
+
+  const timeLabel = next.startTime ? ` &middot; ${formatTime12h(next.startTime)}` : "";
+  const coverLabel = next.coverCharge > 0 ? `$${next.coverCharge.toFixed(2)} cover` : "No cover";
+  heroTitleEl.textContent = next.title;
+  heroSubtitleEl.innerHTML = `${formatDate(next.eventDate)}${timeLabel} &middot; ${coverLabel}${next.description ? ` &mdash; ${escapeHtml(next.description)}` : ""}`;
 }
 
 function renderEvents(events) {

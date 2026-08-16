@@ -12,7 +12,14 @@ import {
   nowCentral,
   todayCentralISO,
 } from "./db/queries";
-import { bandApplications, bandApplicationStatus, events, menuCategories, menuItems } from "./db/schema";
+import {
+  bandApplications,
+  bandApplicationStatus,
+  events,
+  menuCategories,
+  menuCategorySections,
+  menuItems,
+} from "./db/schema";
 import { login, logout, isAuthenticated, requireAuth, checkLoginRateLimit } from "./lib/auth";
 import { sendReservationSms } from "./lib/reservationNotify";
 import { notifyOwnerOfBandApplication } from "./lib/mailer";
@@ -76,8 +83,11 @@ const newCategorySchema = z.object({
   name: z.string().trim().min(1).max(80),
   displayOrder: z.number().int().min(0).max(999).default(0),
   imageUrl: z.string().trim().url().optional(),
+  section: z.enum(menuCategorySections).optional(),
 });
-const updateCategorySchema = newCategorySchema.partial();
+const updateCategorySchema = newCategorySchema.partial().extend({
+  section: z.enum(menuCategorySections).nullable().optional(),
+});
 
 app.post("/api/menu/categories", requireAuth, async (c) => {
   const body = await c.req.json().catch(() => null);

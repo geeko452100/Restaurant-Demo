@@ -57,7 +57,13 @@ function renderMenu(menu) {
         <section class="card">
           <h2>
             ${escapeHtml(category.name)}
-            <button type="button" class="secondary" style="margin-left:auto" data-delete-category="${category.id}">Delete Category</button>
+            <select class="ml-auto" style="width:auto;min-height:0;padding:4px 8px;" data-category-section="${category.id}">
+              <option value="" ${!category.section ? "selected" : ""}>No dedicated page</option>
+              <option value="burgers" ${category.section === "burgers" ? "selected" : ""}>Burgers (/burgers)</option>
+              <option value="appetizers" ${category.section === "appetizers" ? "selected" : ""}>Appetizers (/appetizers)</option>
+              <option value="drinks" ${category.section === "drinks" ? "selected" : ""}>Drinks (/drinks)</option>
+            </select>
+            <button type="button" class="secondary" data-delete-category="${category.id}">Delete Category</button>
           </h2>
           <ul class="beer-list">${category.items.length ? category.items.map(renderItem).join("") : `<li class="empty-note">Nothing here yet.</li>`}</ul>
         </section>
@@ -77,6 +83,28 @@ function renderMenu(menu) {
   rootEl.querySelectorAll("button[data-delete-category]").forEach((btn) => {
     btn.addEventListener("click", () => deleteCategory(btn.dataset.deleteCategory));
   });
+  rootEl.querySelectorAll("select[data-category-section]").forEach((select) => {
+    select.addEventListener("change", () => updateCategorySection(select.dataset.categorySection, select.value));
+  });
+}
+
+async function updateCategorySection(id, section) {
+  try {
+    const res = await fetch(`/api/menu/categories/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ section: section || null }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      showStatus(data.error || "Couldn't update that category's page.", "error");
+      loadMenu();
+      return;
+    }
+    loadMenu();
+  } catch {
+    showStatus("Something went wrong. The connection to the database may have dropped — please try again.", "error");
+  }
 }
 
 function renderItem(item) {
@@ -261,6 +289,7 @@ categoryForm.addEventListener("submit", async (e) => {
     name: String(data.get("name") || "").trim(),
     displayOrder: Number(data.get("displayOrder") || 0),
     imageUrl: String(data.get("imageUrl") || "").trim() || undefined,
+    section: String(data.get("section") || "").trim() || undefined,
   };
 
   const submitBtn = categoryForm.querySelector("button");

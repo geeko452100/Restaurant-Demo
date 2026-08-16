@@ -39,13 +39,13 @@
 
   /* Topbar: logo far left, nav links right (desktop) / hamburger right (mobile) */
   .topbar {
-    @apply flex items-center justify-between gap-4 px-5 py-2.5 border-b border-border sticky top-0 z-20 bg-bg/95 backdrop-blur-[10px];
+    @apply flex items-center justify-between gap-4 px-5 py-4 border-b border-border sticky top-0 z-20 bg-bg/95 backdrop-blur-[10px];
   }
   .topbar-logo {
     @apply shrink-0 leading-none;
   }
   .topbar-logo img {
-    @apply w-11 h-11 rounded-lg bg-white p-1 object-contain block;
+    @apply w-20 h-20 object-contain block drop-shadow-[0_0_10px_rgba(244,180,26,0.35)];
   }
   .header-actions {
     @apply mt-4 flex justify-center gap-3 flex-wrap;
@@ -244,6 +244,33 @@
     @apply font-sans font-bold text-accent text-base tabular-nums;
   }
 
+  /* Menu items as a grid of individual cards, one per dish/drink. */
+  .menu-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+  }
+  .menu-item-card {
+    @apply relative flex flex-col gap-3 bg-panel-2 border border-border rounded-lg p-4 overflow-hidden;
+  }
+  .menu-item-card.is-sold-out {
+    @apply opacity-60;
+  }
+  .menu-item-card-media {
+    @apply w-full h-36 -mt-4 -mx-4 mb-0 rounded-t-lg overflow-hidden bg-gradient-to-br from-panel-2 to-bg border-b border-border flex items-center justify-center text-brand/70;
+    width: calc(100% + 2rem);
+  }
+  .menu-item-card-media img {
+    @apply w-full h-full object-cover;
+  }
+  .menu-item-card-media svg {
+    @apply w-10 h-10;
+  }
+  .menu-item-card-header {
+    @apply flex justify-between items-baseline gap-3;
+  }
+  .menu-item-card-footer {
+    @apply flex items-center justify-between gap-2 mt-auto pt-1;
+  }
+
   .badge {
     @apply inline-flex items-center gap-1.5 text-xs py-1 px-2.5 rounded-full whitespace-nowrap font-sans font-semibold tracking-wide;
   }
@@ -404,6 +431,53 @@
   }
   .week-day-empty {
     @apply text-muted italic font-sans text-sm;
+  }
+
+  /* Month calendar grid (public /calendar page) */
+  .calendar-header {
+    @apply flex items-center justify-between gap-3 mb-4;
+  }
+  .calendar-month-label {
+    @apply text-brand-bright text-xl font-semibold font-display;
+  }
+  .calendar-nav-btn {
+    @apply !bg-panel-2 !text-cream !shadow-none border border-border py-1.5 px-3 text-sm min-h-[40px] hover:!text-brand-bright hover:!border-brand;
+  }
+  .calendar-grid {
+    @apply grid grid-cols-7 gap-1 sm:gap-2;
+  }
+  .calendar-weekday {
+    @apply text-center text-muted text-xs font-sans tracking-wide py-1.5 uppercase;
+  }
+  .calendar-day {
+    @apply relative flex flex-col gap-1 min-h-[72px] sm:min-h-[92px] p-1.5 sm:p-2 rounded-lg border border-border bg-panel-2/60;
+  }
+  .calendar-day.is-other-month {
+    @apply opacity-35;
+  }
+  .calendar-day.is-today {
+    @apply border-brand bg-brand/[.08];
+  }
+  .calendar-day.is-admin-editable {
+    @apply cursor-pointer transition-colors hover:border-brand/60 hover:bg-panel-2;
+  }
+  .calendar-day-number {
+    @apply text-xs font-sans text-muted;
+  }
+  .calendar-day.is-today .calendar-day-number {
+    @apply text-brand-bright font-bold;
+  }
+  .calendar-day-events {
+    @apply flex flex-col gap-1;
+  }
+  .calendar-event-chip {
+    @apply block text-left text-[11px] sm:text-xs leading-tight font-sans bg-brand/[.15] text-brand-bright border border-brand/30 rounded px-1.5 py-1 truncate no-underline hover:bg-brand/[.25];
+  }
+  .calendar-admin-bar {
+    @apply flex items-center justify-between gap-3 mb-4 py-2.5 px-3.5 rounded-md bg-brand/[.1] border border-brand/30 font-sans text-sm text-brand-bright;
+  }
+  .calendar-event-form {
+    @apply mt-5 pt-5 border-t border-border;
   }
 
   /* Admin tables */

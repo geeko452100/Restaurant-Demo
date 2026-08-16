@@ -15,7 +15,7 @@
 <div class="admin-banner">ADMIN &middot; INVENTORY</div>
 <header class="topbar">
   <a href="../index.html" class="topbar-logo">
-    <img src="../assets/logo.webp" alt="Rhythm & Brews" />
+    <img src="../assets/rhythm_brews.webp" alt="Rhythm & Brews" />
   </a>
   <nav class="site-nav">
     <a href="index.html" class="active">Keg Toggle</a>
@@ -110,6 +110,15 @@
       <div class="field">
         <label for="categoryImageUrl">Banner image URL</label>
         <input type="url" id="categoryImageUrl" name="imageUrl" />
+      </div>
+      <div class="field">
+        <label for="categorySection">Public page</label>
+        <select id="categorySection" name="section">
+          <option value="">None (not shown on a dedicated menu page)</option>
+          <option value="burgers">Burgers &amp; Sandwiches (/burgers)</option>
+          <option value="appetizers">Appetizers (/appetizers)</option>
+          <option value="drinks">Drinks (/drinks)</option>
+        </select>
       </div>
       <button type="submit">Add Category</button>
       <div class="status-msg" id="category-form-status"></div>

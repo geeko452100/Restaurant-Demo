@@ -5,11 +5,19 @@ import { sqliteTable, integer, text, real, index } from "drizzle-orm/sqlite-core
 // INTEGER 0/1 and every date/time value is normalized to an ISO-8601 TEXT
 // string so comparisons stay consistent across edge nodes.
 
+export const menuCategorySections = ["burgers", "appetizers", "drinks"] as const;
+export type MenuCategorySection = (typeof menuCategorySections)[number];
+
 export const menuCategories = sqliteTable("menu_categories", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   displayOrder: integer("display_order").notNull().default(0),
   imageUrl: text("image_url"),
+  // Which public page this category's items appear on: /burgers,
+  // /appetizers, or /drinks. Null means it doesn't show on any of those
+  // dedicated pages (e.g. the day-of-week lunch specials, which surface
+  // via the homepage "today's special" banner instead).
+  section: text("section", { enum: menuCategorySections }),
 });
 
 export const menuItems = sqliteTable("menu_items", {

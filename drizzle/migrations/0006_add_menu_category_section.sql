@@ -1,0 +1,1 @@
+ALTER TABLE `menu_categories` ADD `section` text;
