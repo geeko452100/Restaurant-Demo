@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import type { Env } from "./env";
 import { getDb } from "./db/index";
-import { getMenuByCategory, getUpcomingEvents, getBandApplications } from "./db/queries";
+import { getMenuByCategory, getUpcomingEvents, getBandApplications, getTodaysSpecial } from "./db/queries";
 import { bandApplications, bandApplicationStatus, events, menuItems } from "./db/schema";
 import { login, logout, isAuthenticated, requireAuth, checkLoginRateLimit } from "./lib/auth";
 import { sendReservationSms } from "./lib/reservationNotify";
@@ -50,6 +50,12 @@ app.get("/api/auth/me", async (c) => {
 app.get("/api/menu", async (c) => {
   const menu = await getMenuByCategory(getDb(c.env.DB));
   return c.json(menu);
+});
+
+// Server-computed "today's lunch special" in Central Time.
+app.get("/api/specials", async (c) => {
+  const result = await getTodaysSpecial(getDb(c.env.DB));
+  return c.json(result);
 });
 
 // Secure inventory toggle: only an authenticated owner session may flip
@@ -158,7 +164,7 @@ app.patch("/api/bands/:id", requireAuth, async (c) => {
   const body = await c.req.json().catch(() => null);
   const parsed = statusSchema.safeParse(body);
   if (!parsed.success) {
-    return c.json({ error: "status must be pending, approved, or archived" }, 400);
+    return c.json({ error: "status must be Pending, Reviewed, or Booked" }, 400);
   }
 
   const [updated] = await getDb(c.env.DB)
