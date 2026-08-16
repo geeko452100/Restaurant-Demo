@@ -17,9 +17,12 @@
     return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
   }
 
-  function render({ eyebrowClass, eyebrowText, title, meta, imageUrl, showPulse }) {
+  function render({ eyebrowClass, eyebrowText, title, meta, imageUrl, imageAvifUrl, showPulse }) {
+    const img = `<img src="${imageUrl}" alt="" loading="lazy" />`;
     const media = imageUrl
-      ? `<img src="${imageUrl}" alt="" loading="lazy" />`
+      ? imageAvifUrl
+        ? `<picture><source srcset="${imageAvifUrl}" type="image/avif">${img}</picture>`
+        : img
       : "";
 
     el.innerHTML = `
@@ -98,6 +101,7 @@
       title: "No schedule, no cover, just good times",
       meta: "Pool, darts, and the jukebox are always on.",
       imageUrl: "/assets/png/pool_table.png",
+      imageAvifUrl: "/assets/avif/pool_table.avif",
       showPulse: false,
     });
   }
