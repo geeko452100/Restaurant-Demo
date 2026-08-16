@@ -7,10 +7,11 @@
     font-size: 18px;
   }
   body {
-    @apply m-0 min-h-screen bg-bg text-navy font-serif;
+    @apply m-0 min-h-screen bg-bg text-cream font-serif;
     background-image:
-      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(28, 42, 78, 0.06), transparent 60%),
-      radial-gradient(ellipse 700px 400px at 100% 20%, rgba(158, 46, 54, 0.05), transparent 60%);
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(99, 123, 233, 0.14), transparent 60%),
+      radial-gradient(ellipse 800px 450px at 100% 20%, rgba(74, 50, 34, 0.55), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 0% 90%, rgba(158, 46, 54, 0.1), transparent 60%);
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
