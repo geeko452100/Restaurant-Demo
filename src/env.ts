@@ -7,9 +7,6 @@ export interface Env {
   ADMIN_PASSWORD_HASH: string;
   AUTH_SECRET: string;
 
-  // Carrier lookup for the email-to-SMS gateway (https://veriphone.io).
-  VERIPHONE_API_KEY?: string;
-
   // Transactional email (https://resend.com). RESEND_FROM_EMAIL must be on
   // a domain verified in your Resend account.
   RESEND_API_KEY?: string;

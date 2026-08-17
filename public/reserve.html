@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
+<link rel="icon" type="image/png" href="assets/png/logo.png" />
 </head>
 <body>
 <div class="demo-disclaimer">Interactive Website Concept created by Prairie Web Studio. This is an independent design proposal and is not the official website for Rhythm &amp; Brews.</div>
@@ -41,7 +42,7 @@
 <main>
   <section class="card">
     <h2>Reserve a Table</h2>
-    <p class="empty-note">Enter your own cell number to see the instant text confirmation.</p>
+    <p class="empty-note">Pick a date, time, and party size, then choose your seat on the floor plan below.</p>
     <form id="reserve-form">
       <div class="field">
         <label for="name">Name</label>
@@ -62,15 +63,18 @@
           <option value="2" selected>2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8+</option>
         </select>
       </div>
       <div class="field">
         <label for="time">Time</label>
         <input type="time" id="time" name="time" required />
+      </div>
+      <div class="field">
+        <label>Pick a seat</label>
+        <div id="seat-grid" class="seat-grid">
+          <p class="empty-note">Choose a date, time, and party size to see available seats.</p>
+        </div>
+        <input type="hidden" id="seatNumber" name="seatNumber" required />
       </div>
       <button type="submit">Confirm Reservation</button>
       <div class="status-msg" id="reserve-status"></div>

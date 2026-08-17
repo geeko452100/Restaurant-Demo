@@ -492,6 +492,29 @@
     @apply mt-5 pt-5 border-t border-border;
   }
 
+  /* Reservation floor-plan picker (public /reserve page) */
+  .seat-grid {
+    @apply flex flex-col gap-1.5 sm:gap-2 my-2;
+  }
+  .seat-row {
+    @apply grid grid-cols-6 gap-1.5 sm:gap-2;
+  }
+  .seat-tile {
+    @apply flex flex-col items-center justify-center gap-0.5 min-h-[52px] sm:min-h-[60px] rounded-lg border border-border bg-panel-2/60 text-cream font-sans text-xs sm:text-sm cursor-pointer transition-colors hover:border-brand/60;
+  }
+  .seat-tile-type {
+    @apply text-[10px] sm:text-xs text-muted uppercase tracking-wide;
+  }
+  .seat-tile.is-selected {
+    @apply border-brand bg-brand/[.18] text-brand-bright;
+  }
+  .seat-tile.is-disabled {
+    @apply cursor-not-allowed opacity-35 hover:border-border;
+  }
+  .seat-tile.is-empty {
+    @apply border-none bg-transparent cursor-default hover:border-none;
+  }
+
   /* Admin tables */
   .admin-table {
     @apply w-full border-collapse text-sm font-sans;

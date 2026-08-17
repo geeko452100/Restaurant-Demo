@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import type { Db } from "./index";
-import { bandApplications, events, menuCategories, menuItems } from "./schema";
+import { bandApplications, events, menuCategories, menuItems, reservations } from "./schema";
+import { findSeat } from "../lib/seatLayout";
 
 // The restaurant operates on Central Time regardless of where the edge
 // node or a visitor's browser happens to be, so "today" and "now" for
@@ -110,4 +111,50 @@ export async function getTodaysSpecial(db: Db) {
 
 export async function getBandApplications(db: Db) {
   return db.select().from(bandApplications).orderBy(desc(bandApplications.submittedAt));
+}
+
+// ---------- Reservations ----------
+
+// Each reservation occupies a fixed 2-hour block starting at its booked
+// time; two bookings on the same seat/date conflict if their start times
+// fall within 2 hours of each other in either direction.
+const RESERVATION_WINDOW_MINUTES = 120;
+
+function timeToMinutes(hhmm: string) {
+  const [hour, minute] = hhmm.split(":").map(Number);
+  return hour * 60 + minute;
+}
+
+export async function getReservationsForDate(db: Db, date: string) {
+  return db.select().from(reservations).where(eq(reservations.date, date));
+}
+
+// Seat numbers that conflict with the given date/time across the whole
+// floor plan in one query — used by both the availability endpoint (to
+// gray out the grid) and the reserve endpoint (to reject a booking).
+export async function getBookedSeatNumbers(db: Db, date: string, time: string) {
+  const requestedMinutes = timeToMinutes(time);
+  const dayReservations = await getReservationsForDate(db, date);
+  const booked = new Set<number>();
+  for (const r of dayReservations) {
+    if (Math.abs(timeToMinutes(r.time) - requestedMinutes) < RESERVATION_WINDOW_MINUTES) {
+      booked.add(r.seatNumber);
+    }
+  }
+  return [...booked];
+}
+
+export async function getUpcomingReservations(db: Db, date?: string) {
+  const rows = date
+    ? await db.select().from(reservations).where(eq(reservations.date, date)).orderBy(asc(reservations.time))
+    : await db
+        .select()
+        .from(reservations)
+        .where(sql`${reservations.date} >= date('now')`)
+        .orderBy(asc(reservations.date), asc(reservations.time));
+
+  return rows.map((r) => {
+    const seat = findSeat(r.seatNumber);
+    return { ...r, seatType: seat?.type ?? null, seatCapacity: seat?.capacity ?? null };
+  });
 }

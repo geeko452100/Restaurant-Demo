@@ -83,6 +83,27 @@ export const bandApplications = sqliteTable("band_applications", {
     .default(sql`(CURRENT_TIMESTAMP)`),
 });
 
+export const reservations = sqliteTable(
+  "reservations",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull(),
+    phone: text("phone").notNull(),
+    partySize: integer("party_size").notNull(),
+    // References a seat number from src/lib/seatLayout.ts — the floor
+    // plan is fixed in code, not a DB table, so there's no FK here.
+    seatNumber: integer("seat_number").notNull(),
+    date: text("date").notNull(), // ISO-8601 date
+    time: text("time").notNull(), // ISO-8601 HH:MM, start of the 2-hr window
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(CURRENT_TIMESTAMP)`),
+  },
+  (table) => ({
+    dateSeatIdx: index("reservations_date_seat_idx").on(table.date, table.seatNumber),
+  })
+);
+
 export type MenuCategory = typeof menuCategories.$inferSelect;
 export type NewMenuCategory = typeof menuCategories.$inferInsert;
 export type MenuItem = typeof menuItems.$inferSelect;
@@ -91,3 +112,5 @@ export type Event = typeof events.$inferSelect;
 export type NewEvent = typeof events.$inferInsert;
 export type BandApplication = typeof bandApplications.$inferSelect;
 export type NewBandApplication = typeof bandApplications.$inferInsert;
+export type Reservation = typeof reservations.$inferSelect;
+export type NewReservation = typeof reservations.$inferInsert;

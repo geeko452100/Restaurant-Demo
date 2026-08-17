@@ -9,6 +9,8 @@ import {
   getUpcomingEvents,
   getBandApplications,
   getTodaysSpecial,
+  getBookedSeatNumbers,
+  getUpcomingReservations,
   nowCentral,
   todayCentralISO,
 } from "./db/queries";
@@ -19,10 +21,11 @@ import {
   menuCategories,
   menuCategorySections,
   menuItems,
+  reservations,
 } from "./db/schema";
 import { login, logout, isAuthenticated, requireAuth, checkLoginRateLimit } from "./lib/auth";
-import { sendReservationSms } from "./lib/reservationNotify";
 import { notifyOwnerOfBandApplication } from "./lib/mailer";
+import { SEAT_LAYOUT, findSeat } from "./lib/seatLayout";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -334,32 +337,37 @@ app.patch("/api/bands/:id", requireAuth, async (c) => {
 
 // ---------- Reservations ----------
 
+const dateSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be an ISO-8601 date")
+  .refine((date) => date >= todayCentralISO(), "date can't be in the past");
+
+const timeSchema = z.string().regex(/^\d{2}:\d{2}$/, "time must be HH:MM");
+
 const reservationSchema = z.object({
   name: z.string().trim().min(1).max(100),
   phone: z
     .string()
     .trim()
     .regex(/^\+?[0-9\s()-]{7,20}$/, "Enter a valid phone number"),
-  date: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be an ISO-8601 date")
-    .refine((date) => date >= todayCentralISO(), "date can't be in the past"),
+  date: dateSchema,
   partySize: z.coerce.number().int().min(1).max(20),
-  time: z.string().regex(/^\d{2}:\d{2}$/, "time must be HH:MM"),
+  time: timeSchema,
+  seatNumber: z.coerce.number().int(),
 });
 
-function formatReservationDate(iso: string) {
-  const [year, month, day] = iso.split("-").map(Number);
-  const d = new Date(Date.UTC(year, month - 1, day));
-  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
-}
+const availabilityQuerySchema = z.object({ date: dateSchema, time: timeSchema });
 
-function formatTime12h(hhmm: string) {
-  const [hour, minute] = hhmm.split(":").map(Number);
-  const period = hour >= 12 ? "PM" : "AM";
-  const hour12 = hour % 12 || 12;
-  return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
-}
+app.get("/api/reservations/availability", async (c) => {
+  const parsed = availabilityQuerySchema.safeParse(c.req.query());
+  if (!parsed.success) {
+    return c.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, 400);
+  }
+
+  const { date, time } = parsed.data;
+  const bookedSeatNumbers = await getBookedSeatNumbers(getDb(c.env.DB), date, time);
+  return c.json({ layout: SEAT_LAYOUT, bookedSeatNumbers });
+});
 
 app.post("/api/reserve", async (c) => {
   const body = await c.req.json().catch(() => null);
@@ -368,16 +376,45 @@ app.post("/api/reserve", async (c) => {
     return c.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, 400);
   }
 
-  const { name, phone, date, partySize, time } = parsed.data;
-  const dateLabel = date === todayCentralISO() ? "today" : `on ${formatReservationDate(date)}`;
-  const message = `Your table at Rhythm & Brews is confirmed! Party of ${partySize} ${dateLabel} at ${formatTime12h(time)}. See you soon, ${name}!`;
-  const result = await sendReservationSms(c.env, phone, message);
+  const { name, phone, date, partySize, time, seatNumber } = parsed.data;
 
-  if (!result.sent && !result.stub) {
-    return c.json({ sent: false, error: result.error }, 502);
+  const seat = findSeat(seatNumber);
+  if (!seat) return c.json({ error: "That seat doesn't exist." }, 400);
+  if (partySize > seat.capacity) {
+    return c.json({ error: `That seat seats up to ${seat.capacity}.` }, 400);
   }
 
-  return c.json(result);
+  const db = getDb(c.env.DB);
+  const bookedSeatNumbers = await getBookedSeatNumbers(db, date, time);
+  if (bookedSeatNumbers.includes(seatNumber)) {
+    return c.json({ ok: false, error: "Sorry, that seat is booked for that time. Please pick another." });
+  }
+
+  await db.insert(reservations).values({ name, phone, partySize, seatNumber, date, time });
+  return c.json({ ok: true });
+});
+
+const isoDateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+app.get("/api/reservations", requireAuth, async (c) => {
+  const date = c.req.query("date");
+  if (date && !isoDateFormat.test(date)) {
+    return c.json({ error: "Invalid date" }, 400);
+  }
+  const list = await getUpcomingReservations(getDb(c.env.DB), date);
+  return c.json(list);
+});
+
+app.delete("/api/reservations/:id", requireAuth, async (c) => {
+  const reservationId = Number(c.req.param("id"));
+  if (!Number.isInteger(reservationId)) return c.json({ error: "Invalid reservation id" }, 400);
+
+  const [deleted] = await getDb(c.env.DB)
+    .delete(reservations)
+    .where(eq(reservations.id, reservationId))
+    .returning();
+  if (!deleted) return c.json({ error: "Reservation not found" }, 404);
+  return c.json({ ok: true });
 });
 
 // ---------- Scheduled: cosmetic "servings remaining" auto-decrement ----------
