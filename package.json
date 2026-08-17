@@ -15,7 +15,8 @@
     "db:migrate:remote": "wrangler d1 migrations apply rhythm-and-brews-db --remote",
     "db:seed:local": "wrangler d1 execute rhythm-and-brews-db --local --file=./src/db/seed.sql",
     "db:seed:remote": "wrangler d1 execute rhythm-and-brews-db --remote --file=./src/db/seed.sql",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "hash-password": "node scripts/hash-password.mjs"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",

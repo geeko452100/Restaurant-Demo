@@ -99,6 +99,7 @@
         <label for="mediaLink">Spotify or YouTube link</label>
         <input type="url" id="mediaLink" name="mediaLink" placeholder="https://open.spotify.com/artist/..." required />
       </div>
+      <div id="turnstile-bands" class="cf-turnstile" data-sitekey="0x4AAAAAAETNf1ff8rNZPBRA" data-action="bands"></div>
       <button type="submit">Apply to Play</button>
       <div class="status-msg" id="band-status"></div>
     </form>
@@ -108,6 +109,7 @@
 <div class="staff-divider" aria-hidden="true"></div>
 <footer class="site-footer"><a href="admin/login.html">Staff Login</a></footer>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="js/nav.js"></script>
 <script src="js/events.js"></script>
 </body>

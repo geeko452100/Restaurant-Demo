@@ -16,6 +16,23 @@ database_name = "rhythm-and-brews-db"
 database_id = "5f1e3364-9c04-475d-a59c-f0fb402e571c"
 migrations_dir = "drizzle/migrations"
 
+[[ratelimits]]
+name = "LOGIN_RATE_LIMITER"
+# Any unique positive integer, distinct per binding within this account.
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 5
+  period = 60
+
+[[ratelimits]]
+name = "PUBLIC_FORM_RATE_LIMITER"
+namespace_id = "1002"
+
+  [ratelimits.simple]
+  limit = 10
+  period = 60
+
 [observability]
 enabled = true
 

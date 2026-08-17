@@ -23,9 +23,12 @@ import {
   menuItems,
   reservations,
 } from "./db/schema";
-import { login, logout, isAuthenticated, requireAuth, checkLoginRateLimit } from "./lib/auth";
+import { login, logout, isAuthenticated, requireAuth } from "./lib/auth";
 import { notifyOwnerOfBandApplication } from "./lib/mailer";
+import { checkRateLimit } from "./lib/rateLimit";
+import { sendReservationSms } from "./lib/reservationNotify";
 import { SEAT_LAYOUT, findSeat } from "./lib/seatLayout";
+import { verifyTurnstile } from "./lib/turnstile";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -40,16 +43,16 @@ app.onError((err, c) => {
 
 app.post("/api/auth/login", async (c) => {
   const ip = c.req.header("CF-Connecting-IP") ?? "unknown";
-  if (!checkLoginRateLimit(ip)) {
+  if (!(await checkRateLimit(c.env.LOGIN_RATE_LIMITER, ip))) {
     return c.json({ error: "Too many attempts. Try again in a minute." }, 429);
   }
 
   const body = await c.req.json().catch(() => null);
-  const username = typeof body?.username === "string" ? body.username : "";
+  const email = typeof body?.email === "string" ? body.email : "";
   const password = typeof body?.password === "string" ? body.password : "";
 
-  const ok = await login(c, username, password);
-  if (!ok) return c.json({ error: "Invalid username or password." }, 401);
+  const ok = await login(c, email, password);
+  if (!ok) return c.json({ error: "Invalid email or password." }, 401);
   return c.json({ ok: true });
 });
 
@@ -298,7 +301,24 @@ app.get("/api/bands", requireAuth, async (c) => {
 });
 
 app.post("/api/bands", async (c) => {
+  const ip = c.req.header("CF-Connecting-IP") ?? "unknown";
+  if (!(await checkRateLimit(c.env.PUBLIC_FORM_RATE_LIMITER, `bands:${ip}`))) {
+    return c.json({ error: "Too many submissions. Try again in a minute." }, 429);
+  }
+
   const body = await c.req.json().catch(() => null);
+
+  const humanVerified = await verifyTurnstile(
+    c.env.TURNSTILE_SECRET,
+    (body as { turnstileToken?: unknown } | null)?.turnstileToken,
+    "bands",
+    c.env.TURNSTILE_HOSTNAMES,
+    ip
+  );
+  if (!humanVerified) {
+    return c.json({ error: "Verification failed. Please try again." }, 403);
+  }
+
   const parsed = newApplicationSchema.safeParse(body);
   if (!parsed.success) {
     return c.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, 400);
@@ -356,6 +376,19 @@ const reservationSchema = z.object({
   seatNumber: z.coerce.number().int(),
 });
 
+function formatReservationDate(iso: string) {
+  const [year, month, day] = iso.split("-").map(Number);
+  const d = new Date(Date.UTC(year, month - 1, day));
+  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+function formatTime12h(hhmm: string) {
+  const [hour, minute] = hhmm.split(":").map(Number);
+  const period = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${String(minute).padStart(2, "0")} ${period}`;
+}
+
 const availabilityQuerySchema = z.object({ date: dateSchema, time: timeSchema });
 
 app.get("/api/reservations/availability", async (c) => {
@@ -370,7 +403,24 @@ app.get("/api/reservations/availability", async (c) => {
 });
 
 app.post("/api/reserve", async (c) => {
+  const ip = c.req.header("CF-Connecting-IP") ?? "unknown";
+  if (!(await checkRateLimit(c.env.PUBLIC_FORM_RATE_LIMITER, `reserve:${ip}`))) {
+    return c.json({ error: "Too many reservation attempts. Try again in a minute." }, 429);
+  }
+
   const body = await c.req.json().catch(() => null);
+
+  const humanVerified = await verifyTurnstile(
+    c.env.TURNSTILE_SECRET,
+    (body as { turnstileToken?: unknown } | null)?.turnstileToken,
+    "reserve",
+    c.env.TURNSTILE_HOSTNAMES,
+    ip
+  );
+  if (!humanVerified) {
+    return c.json({ error: "Verification failed. Please try again." }, 403);
+  }
+
   const parsed = reservationSchema.safeParse(body);
   if (!parsed.success) {
     return c.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, 400);
@@ -391,7 +441,12 @@ app.post("/api/reserve", async (c) => {
   }
 
   await db.insert(reservations).values({ name, phone, partySize, seatNumber, date, time });
-  return c.json({ ok: true });
+
+  const dateLabel = date === todayCentralISO() ? "today" : `on ${formatReservationDate(date)}`;
+  const message = `Your table at Rhythm & Brews is confirmed! Party of ${partySize} ${dateLabel} at ${formatTime12h(time)}. See you soon, ${name}!`;
+  const sms = await sendReservationSms(c.env, phone, message);
+
+  return c.json({ ok: true, sms });
 });
 
 const isoDateFormat = /^\d{4}-\d{2}-\d{2}$/;

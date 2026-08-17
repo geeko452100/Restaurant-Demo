@@ -12,14 +12,14 @@ formEl.addEventListener("submit", async (e) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: String(data.get("username") || ""),
+        email: String(data.get("email") || ""),
         password: String(data.get("password") || ""),
       }),
     });
 
     if (!res.ok) {
       const result = await res.json().catch(() => ({}));
-      statusEl.textContent = result.error || "Invalid username or password.";
+      statusEl.textContent = result.error || "Invalid email or password.";
       statusEl.className = "status-msg show error";
       return;
     }

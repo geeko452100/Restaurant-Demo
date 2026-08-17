@@ -86,12 +86,19 @@ formEl.addEventListener("submit", async (e) => {
   e.preventDefault();
   const data = new FormData(formEl);
   const rate = String(data.get("rate") || "").trim();
+  const turnstileToken = String(data.get("cf-turnstile-response") || "");
+  if (!turnstileToken) {
+    showStatus("Please complete the verification.", "error");
+    return;
+  }
+
   const payload = {
     bandName: String(data.get("bandName") || "").trim(),
     genre: String(data.get("genre") || "").trim(),
     rate: rate ? Number(rate) : undefined,
     email: String(data.get("email") || "").trim(),
     mediaLink: String(data.get("mediaLink") || "").trim(),
+    turnstileToken,
   };
 
   const submitBtn = formEl.querySelector("button");
@@ -113,6 +120,7 @@ formEl.addEventListener("submit", async (e) => {
   } catch {
     showStatus("Something went wrong. Please try again.", "error");
   } finally {
+    window.turnstile?.reset("turnstile-bands");
     submitBtn.disabled = false;
   }
 });

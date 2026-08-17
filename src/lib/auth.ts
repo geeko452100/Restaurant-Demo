@@ -5,29 +5,6 @@ import type { Env } from "../env";
 const COOKIE_NAME = "session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
 
-// Best-effort brute-force throttle: 5 attempts/minute per IP, held in
-// module-scope memory. This resets whenever the isolate is recycled and
-// isn't shared across Cloudflare's edge locations, so it's a speed bump
-// rather than a real guarantee — for a hard guarantee, move this to a
-// Durable Object or Cloudflare's Rate Limiting binding.
-const LOGIN_ATTEMPT_LIMIT = 5;
-const LOGIN_WINDOW_MS = 60_000;
-const loginAttempts = new Map<string, { count: number; windowStart: number }>();
-
-export function checkLoginRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = loginAttempts.get(ip);
-
-  if (!entry || now - entry.windowStart > LOGIN_WINDOW_MS) {
-    loginAttempts.set(ip, { count: 1, windowStart: now });
-    return true;
-  }
-
-  if (entry.count >= LOGIN_ATTEMPT_LIMIT) return false;
-  entry.count += 1;
-  return true;
-}
-
 function toBase64Url(bytes: ArrayBuffer | Uint8Array) {
   const arr = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
   let binary = "";
@@ -53,13 +30,47 @@ async function hmac(secret: string, message: string) {
   return toBase64Url(signature);
 }
 
-export async function sha256Hex(value: string) {
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
-  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+// PBKDF2-SHA256 with a high iteration count so a leaked ADMIN_PASSWORD_HASH
+// can't be brute-forced the way a raw SHA-256 digest could. The salt is
+// derived deterministically from AUTH_SECRET rather than stored separately
+// — this means ADMIN_PASSWORD_HASH must be regenerated (via
+// `npm run hash-password`) whenever AUTH_SECRET is rotated.
+const PBKDF2_ITERATIONS = 600_000;
+
+async function passwordSalt(authSecret: string) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`pbkdf2-salt:${authSecret}`));
+  return new Uint8Array(digest);
 }
 
-async function createSessionToken(username: string, secret: string) {
-  const payload = JSON.stringify({ u: username, exp: Date.now() + SESSION_TTL_SECONDS * 1000 });
+async function derivePasswordHash(password: string, salt: Uint8Array) {
+  const keyMaterial = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, [
+    "deriveBits",
+  ]);
+  const bits = await crypto.subtle.deriveBits(
+    { name: "PBKDF2", hash: "SHA-256", salt, iterations: PBKDF2_ITERATIONS },
+    keyMaterial,
+    256
+  );
+  return new Uint8Array(bits);
+}
+
+function fromHex(hex: string) {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = Number.parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+  }
+  return bytes;
+}
+
+function timingSafeEqual(a: Uint8Array, b: Uint8Array) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+  return diff === 0;
+}
+
+async function createSessionToken(email: string, secret: string) {
+  const payload = JSON.stringify({ u: email, exp: Date.now() + SESSION_TTL_SECONDS * 1000 });
   const encodedPayload = toBase64Url(new TextEncoder().encode(payload));
   const signature = await hmac(secret, encodedPayload);
   return `${encodedPayload}.${signature}`;
@@ -80,12 +91,16 @@ async function verifySessionToken(token: string, secret: string): Promise<boolea
   }
 }
 
-export async function login(c: Context<{ Bindings: Env }>, username: string, password: string) {
-  const hashed = await sha256Hex(password);
-  const valid = username === c.env.ADMIN_USERNAME && hashed === c.env.ADMIN_PASSWORD_HASH;
-  if (!valid) return false;
+export async function login(c: Context<{ Bindings: Env }>, email: string, password: string) {
+  const salt = await passwordSalt(c.env.AUTH_SECRET);
+  const candidate = await derivePasswordHash(password, salt);
+  const expected = fromHex(c.env.ADMIN_PASSWORD_HASH);
 
-  const token = await createSessionToken(username, c.env.AUTH_SECRET);
+  const emailMatches = email.trim().toLowerCase() === c.env.ADMIN_EMAIL.trim().toLowerCase();
+  const passwordMatches = timingSafeEqual(candidate, expected);
+  if (!emailMatches || !passwordMatches) return false;
+
+  const token = await createSessionToken(email, c.env.AUTH_SECRET);
   setCookie(c, COOKIE_NAME, token, {
     httpOnly: true,
     // `wrangler dev` serves plain HTTP locally; a `Secure` cookie would be

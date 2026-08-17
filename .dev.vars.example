@@ -2,10 +2,11 @@
 # Copy to `.dev.vars` (gitignored) and fill in. In production these are set
 # with `wrangler secret put <NAME>` instead of committed anywhere.
 
-# Owner login for /admin (NextAuth Credentials provider).
-ADMIN_USERNAME=owner
-# sha256 hex digest of the admin password, e.g.
-# printf '%s' 'your-password' | sha256sum
+# Owner login for /admin. AUTH_SECRET must be set first, then generate
+# ADMIN_PASSWORD_HASH with:
+#   npm run hash-password -- "<AUTH_SECRET>" "<your-password>"
+# Regenerate the hash any time AUTH_SECRET changes — it's derived from it.
+ADMIN_EMAIL=owner@example.com
 ADMIN_PASSWORD_HASH=
 AUTH_SECRET=
 
@@ -23,3 +24,7 @@ VERIPHONE_API_KEY=
 RESEND_API_KEY=
 RESEND_FROM_EMAIL=
 OWNER_NOTIFICATION_EMAIL=
+
+# Turnstile (https://developers.cloudflare.com/turnstile/) - bot protection
+TURNSTILE_SECRET=
+TURNSTILE_HOSTNAMES=localhost,127.0.0.1

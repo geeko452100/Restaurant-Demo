@@ -76,6 +76,7 @@
         </div>
         <input type="hidden" id="seatNumber" name="seatNumber" required />
       </div>
+      <div id="turnstile-reserve" class="cf-turnstile" data-sitekey="0x4AAAAAAETNf1ff8rNZPBRA" data-action="reserve"></div>
       <button type="submit">Confirm Reservation</button>
       <div class="status-msg" id="reserve-status"></div>
     </form>
@@ -85,6 +86,7 @@
 <div class="staff-divider" aria-hidden="true"></div>
 <footer class="site-footer"><a href="admin/login.html">Staff Login</a></footer>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="js/nav.js"></script>
 <script src="js/reserve.js"></script>
 </body>

@@ -4,6 +4,7 @@ node_modules/
 .dev.vars
 TO_DO.md
 MENU.md
+.txt
 
 # Build output
 public/css/style.css
