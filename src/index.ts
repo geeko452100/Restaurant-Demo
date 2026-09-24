@@ -443,7 +443,7 @@ app.post("/api/reserve", async (c) => {
   await db.insert(reservations).values({ name, phone, partySize, seatNumber, date, time });
 
   const dateLabel = date === todayCentralISO() ? "today" : `on ${formatReservationDate(date)}`;
-  const message = `Your table at Rhythm & Brews is confirmed! Party of ${partySize} ${dateLabel} at ${formatTime12h(time)}. See you soon, ${name}!`;
+  const message = `Your table at Acme Restaurant is confirmed! Party of ${partySize} ${dateLabel} at ${formatTime12h(time)}. See you soon, ${name}!`;
   const sms = await sendReservationSms(c.env, phone, message);
 
   return c.json({ ok: true, sms });

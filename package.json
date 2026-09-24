@@ -1,7 +1,7 @@
 {
-  "name": "rhythm-and-brews-demo",
+  "name": "acme-restaurant-demo",
   "version": "3.0.0",
-  "description": "Rhythm & Brews demo: Cloudflare Worker (Hono) + Drizzle ORM on D1, static Tailwind frontend",
+  "description": "Acme Restaurant demo: Cloudflare Worker (Hono) + Drizzle ORM on D1, static Tailwind frontend",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,10 +11,10 @@
     "deploy": "npm run build:css && wrangler deploy",
     "cf-typegen": "wrangler types",
     "db:generate": "drizzle-kit generate",
-    "db:migrate:local": "wrangler d1 migrations apply rhythm-and-brews-db --local",
-    "db:migrate:remote": "wrangler d1 migrations apply rhythm-and-brews-db --remote",
-    "db:seed:local": "wrangler d1 execute rhythm-and-brews-db --local --file=./src/db/seed.sql",
-    "db:seed:remote": "wrangler d1 execute rhythm-and-brews-db --remote --file=./src/db/seed.sql",
+    "db:migrate:local": "wrangler d1 migrations apply acme-restaurant-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply acme-restaurant-db --remote",
+    "db:seed:local": "wrangler d1 execute acme-restaurant-db --local --file=./src/db/seed.sql",
+    "db:seed:remote": "wrangler d1 execute acme-restaurant-db --remote --file=./src/db/seed.sql",
     "db:studio": "drizzle-kit studio",
     "hash-password": "node scripts/hash-password.mjs"
   },

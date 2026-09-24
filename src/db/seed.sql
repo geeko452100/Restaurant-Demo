@@ -17,7 +17,7 @@ INSERT INTO menu_categories (id, name, display_order, image_url, section) VALUES
 
 INSERT INTO menu_items (category_id, name, description, price, abv, image_url, day_of_week, is_available, is_active, is_local, is_gluten_free, display_order, servings_remaining) VALUES
   -- Draft Beers
-  (1, 'Rhythm Pale Ale', 'American Pale Ale', 7.00, 5.4, NULL, NULL, 1, 1, 1, 0, 1, 48),
+  (1, 'Acme Pale Ale', 'American Pale Ale', 7.00, 5.4, NULL, NULL, 1, 1, 1, 0, 1, 48),
   (1, 'Brews Brothers Stout', 'Oatmeal Stout', 7.50, 6.1, NULL, NULL, 1, 1, 1, 0, 2, 40),
   (1, 'Backbeat IPA', 'West Coast IPA', 8.00, 6.8, NULL, NULL, 1, 1, 1, 0, 3, 55),
   (1, 'Encore Wheat', 'Hefeweizen', 7.00, 4.9, NULL, NULL, 0, 1, 0, 0, 4, 0),
@@ -54,7 +54,7 @@ INSERT INTO menu_items (category_id, name, description, price, abv, image_url, d
   (5, 'Local Craft Can', 'Canned IPA from a regional Kansas brewery', 5.50, 6.5, NULL, NULL, 1, 1, 1, 0, 4, 36),
   -- House Cocktails
   (6, 'Whiskey Sour', 'Bourbon, fresh lemon, simple syrup', 7.00, 13.0, NULL, NULL, 1, 1, 0, 1, 1, NULL),
-  (6, 'Rhythm Mule', 'House vodka, ginger beer, lime — our signature mixed special', 9.00, 10.0, NULL, NULL, 1, 1, 0, 1, 2, NULL),
+  (6, 'Acme Mule', 'House vodka, ginger beer, lime — our signature mixed special', 9.00, 10.0, NULL, NULL, 1, 1, 0, 1, 2, NULL),
   (6, 'Seasonal Sangria', 'Red wine, brandy, and rotating seasonal fruit', 8.00, 9.0, NULL, NULL, 1, 1, 0, 1, 3, NULL),
   (6, 'Bourbon Old Fashioned', 'Bourbon, bitters, orange, sugar', 9.50, 14.0, NULL, NULL, 1, 1, 0, 1, 4, NULL),
   -- Non-Alcoholic

@@ -45,8 +45,11 @@
   .topbar-logo {
     @apply shrink-0 leading-none;
   }
-  .topbar-logo img {
-    @apply w-20 h-20 object-contain block drop-shadow-[0_0_10px_rgba(51,81,219,0.35)];
+  .topbar-logo-text {
+    @apply font-display text-xl sm:text-2xl tracking-wide text-cream leading-none whitespace-nowrap;
+  }
+  .topbar-logo-text .topbar-logo-accent {
+    @apply text-brand-bright;
   }
   .header-actions {
     @apply mt-4 flex justify-center gap-3 flex-wrap;
@@ -118,9 +121,9 @@
     @apply font-sans text-xs text-cream/70 no-underline tracking-wide hover:text-accent;
   }
 
-  /* Decorative echo of the logo's tilted music staff — a tiled SVG strip
-     of five staff lines with three angled eighth notes, in the logo's
-     maroon. Sits ahead of the footer on every page. */
+  /* Decorative tilted music staff — a tiled SVG strip of five staff
+     lines with three angled eighth notes, in the brand maroon. Sits
+     ahead of the footer on every page. */
   .staff-divider {
     @apply max-w-3xl mx-auto my-8 sm:my-10 h-10 opacity-80;
     background-repeat: repeat-x;

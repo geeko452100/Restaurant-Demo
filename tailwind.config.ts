@@ -5,11 +5,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Logo-matched palette: navy blue cards on a dark charcoal
-        // ground (warmed toward brown for an old pub, whiskey-barrel
-        // feel), royal blue (from the "Rhythm & Brews" wordmark) for
-        // brand accents, deep maroon (from the logo's music staff) as
-        // the secondary accent, and dark oak brown as a third accent.
+        // Navy blue cards on a dark charcoal ground (warmed toward brown
+        // for an old pub, whiskey-barrel feel), royal blue for brand
+        // accents, deep maroon as the secondary accent, and dark oak
+        // brown as a third accent.
         bg: "#211c18",
         panel: "#1c2a4e",
         "panel-2": "#152140",
