@@ -34,11 +34,7 @@ import { notifyOwnerOfBandApplication } from "./lib/mailer";
 import { checkRateLimit } from "./lib/rateLimit";
 import { sendReservationSms } from "./lib/reservationNotify";
 import { SEAT_LAYOUT, findSeat } from "./lib/seatLayout";
-<<<<<<< HEAD
-import { verifyTurnstile } from "./lib/turnstile";
-=======
 import { TAX_RATE, isOrderable, priceOrder } from "./lib/orders";
->>>>>>> 84a24cc (feat: implement online ordering system with cart functionality)
 
 const app = new Hono<{ Bindings: Env }>();
 
