@@ -1,3 +1,14 @@
+const passwordInput = document.getElementById("password");
+const passwordToggle = document.getElementById("password-toggle");
+
+passwordToggle.addEventListener("click", () => {
+  const showing = passwordInput.type === "text";
+  passwordInput.type = showing ? "password" : "text";
+  passwordToggle.setAttribute("aria-pressed", String(!showing));
+  passwordToggle.setAttribute("aria-label", showing ? "Show password" : "Hide password");
+  passwordInput.focus();
+});
+
 const formEl = document.getElementById("login-form");
 const statusEl = document.getElementById("login-status");
 
