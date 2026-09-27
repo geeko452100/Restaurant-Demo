@@ -63,19 +63,20 @@ INSERT INTO menu_items (category_id, name, description, price, abv, image_url, d
   (7, 'Fresh Lemonade', 'Free refills', 2.75, 0.0, NULL, NULL, 1, 1, 0, 1, 3, NULL),
   (7, 'Coffee', 'Regular or decaf', 2.50, 0.0, NULL, NULL, 1, 1, 0, 1, 4, NULL);
 
--- Demo food events (all fictional). These are the dated "Special Events"
--- that surface in the /events hero, the /calendar grid, and the homepage
--- "tonight" banner. cover_charge is the per-person ticket price (0 = free).
+-- Demo specials (all fictional), built from dishes on the menu above.
+-- These are the dated entries that surface in the /events hero, the
+-- /calendar grid, and the homepage "tonight" banner. cover_charge stays 0:
+-- the deal is in the description, there's nothing to pay to attend.
 INSERT INTO events (title, description, event_date, start_time, cover_charge, image_url) VALUES
-  ('Taco Tuesday', 'Build-your-own street tacos, fresh salsa bar, and $2 off all appetizers.', '2026-10-06', '17:00', 0.00, '/assets/png/nachos.png'),
-  ('Harvest Wine Pairing Dinner', 'Four courses of fall comfort food, each paired with a hand-picked wine.', '2026-10-09', '18:30', 45.00, '/assets/png/drink.png'),
-  ('Burger Build-Off', 'Our cooks go head to head on a new house burger. You taste, you vote.', '2026-10-15', '18:00', 0.00, '/assets/png/burger.png'),
-  ('Chili Cook-Off', 'Six chilis, one crown. Grab a tasting flight and cast your ballot.', '2026-10-17', '12:00', 10.00, NULL),
-  ('Sunday Brunch Launch', 'The first weekend of our new brunch menu: biscuits and gravy, hash, and bottomless coffee.', '2026-10-25', '10:00', 0.00, NULL),
-  ('Chef''s Tasting Menu', 'A seven-course tasting menu from the kitchen, one seating only. Reserve a table.', '2026-10-30', '19:00', 60.00, NULL),
-  ('Kids Eat Free Night', 'One free kids'' meal with every adult entrée.', '2026-11-04', '16:00', 0.00, '/assets/png/burger.png'),
-  ('Thanksgiving Pie Pickup', 'Pre-order pumpkin, apple, or pecan pies and pick them up warm.', '2026-11-24', '11:00', 0.00, NULL);
+  ('Half-Price Appetizers', 'Every appetizer on the menu is half off, dine-in only.', '2026-10-06', '15:00', 0.00, '/assets/png/nachos.png'),
+  ('Burger Night', '$3 off any burger or sandwich, plus free cheese on every burger.', '2026-10-08', '17:00', 0.00, '/assets/png/burger.png'),
+  ('Nacho Night', 'Burnt End Nachos and Pulled Pork Nachos are $4 off all evening.', '2026-10-13', '17:00', 0.00, '/assets/png/nachos.png'),
+  ('Family Meal Deal', 'Two burgers, one appetizer, and two fountain drinks for $35.', '2026-10-18', '11:00', 0.00, '/assets/png/burger.png'),
+  ('Philly Cheesesteak Special', 'Philly Cheesesteak with a side of Tater Skins for $15.99.', '2026-10-22', '11:00', 0.00, NULL),
+  ('Kids Eat Free', 'One free kids'' meal with every adult entrée.', '2026-10-27', '16:00', 0.00, '/assets/png/burger.png'),
+  ('Happy Hour All Night', 'Happy hour drink prices from open to close, plus $2 off Queso & Chips.', '2026-10-30', '11:00', 0.00, '/assets/png/drink.png'),
+  ('Appetizer Sampler Special', 'Fried Pickles, Jalapeño Poppers, and Cheesesteak Eggrolls on one platter for $19.99.', '2026-11-05', '15:00', 0.00, '/assets/png/nachos.png');
 
 -- Demo staff login for /admin: staff@example.com / Password123!
 -- Generated with: npm run hash-password -- --staff staff@example.com 'Password123!'
-INSERT OR IGNORE INTO staff_users (email, password_hash, password_salt) VALUES ('staff@example.com', 'bf34adcc5ef4d6d5958c07870ed977cb466bf482ee52d0a9393da7b6be31b764', 'afd5a3af37e31eb99e38a99741590a66');
+INSERT OR IGNORE INTO staff_users (email, password_hash, password_salt) VALUES ('staff@example.com', 'fc30ce200a6aabcb391f719fbaf26f40dc15889ad5f002fb068b60816ff61a53', 'e5ef838532d85c4e183222835119ec00');

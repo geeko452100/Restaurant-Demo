@@ -11,7 +11,7 @@
 
 import { createHash, pbkdf2Sync, randomBytes } from "node:crypto";
 
-const ITERATIONS = 600_000;
+const ITERATIONS = 100_000; // must match PBKDF2_ITERATIONS in src/lib/auth.ts
 
 const args = process.argv.slice(2);
 

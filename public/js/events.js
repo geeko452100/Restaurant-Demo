@@ -24,10 +24,17 @@ function renderHero(events) {
     return;
   }
 
-  const timeLabel = next.startTime ? ` &middot; ${formatTime12h(next.startTime)}` : "";
-  const coverLabel = next.coverCharge > 0 ? `$${next.coverCharge.toFixed(2)} per person` : "Free";
+  const when = [formatDate(next.eventDate), next.startTime && formatTime12h(next.startTime), priceLabel(next)]
+    .filter(Boolean)
+    .join(" &middot; ");
   heroTitleEl.textContent = next.title;
-  heroSubtitleEl.innerHTML = `${formatDate(next.eventDate)}${timeLabel} &middot; ${coverLabel}${next.description ? ` &mdash; ${escapeHtml(next.description)}` : ""}`;
+  heroSubtitleEl.innerHTML = `${when}${next.description ? ` &mdash; ${escapeHtml(next.description)}` : ""}`;
+}
+
+// Most entries are specials with the deal in the description, so a $0
+// price just isn't shown rather than reading as "Free".
+function priceLabel(event) {
+  return event.coverCharge > 0 ? `$${event.coverCharge.toFixed(2)} per person` : "";
 }
 
 function renderEvents(events) {
@@ -38,14 +45,15 @@ function renderEvents(events) {
 
   gridEl.innerHTML = events
     .map((event) => {
-      const coverLabel = event.coverCharge > 0 ? `$${event.coverCharge.toFixed(2)} per person` : "Free";
-      const timeLabel = event.startTime ? `${formatTime12h(event.startTime)} &middot; ` : "";
+      const details = [event.startTime && `Starts ${formatTime12h(event.startTime)}`, priceLabel(event)]
+        .filter(Boolean)
+        .join(" &middot; ");
       return `
         <a class="event-card" href="reserve.html?date=${encodeURIComponent(event.eventDate)}" title="Reserve a table for ${escapeAttr(event.title)}">
           <div class="event-date">${formatDate(event.eventDate)}</div>
           <div class="beer-name">${escapeHtml(event.title)}</div>
           ${event.description ? `<p class="beer-style m-0 mt-1">${escapeHtml(event.description)}</p>` : ""}
-          <div class="event-cover">${timeLabel}${coverLabel}</div>
+          ${details ? `<div class="event-cover">${details}</div>` : ""}
         </a>
       `;
     })

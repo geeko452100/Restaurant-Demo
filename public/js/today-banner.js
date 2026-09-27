@@ -70,12 +70,12 @@
 
     if (tonightsEvent) {
       const timeLabel = tonightsEvent.startTime ? ` · ${formatTime12h(tonightsEvent.startTime)}` : "";
-      const coverLabel = tonightsEvent.coverCharge > 0 ? `$${tonightsEvent.coverCharge.toFixed(2)} per person` : "Free";
+      const priceLabel = tonightsEvent.coverCharge > 0 ? ` · $${tonightsEvent.coverCharge.toFixed(2)} per person` : "";
       render({
         eyebrowClass: "is-live",
-        eyebrowText: "TONIGHT",
+        eyebrowText: "TODAY'S SPECIAL",
         title: `${tonightsEvent.title}${timeLabel}`,
-        meta: coverLabel,
+        meta: `${escapeHtml(tonightsEvent.description || "")}${priceLabel}`,
         imageUrl: tonightsEvent.imageUrl,
         showPulse: true,
       });

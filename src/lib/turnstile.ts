@@ -10,16 +10,18 @@ interface SiteverifyResult {
 }
 
 export async function verifyTurnstile(
-  secret: string,
+  secret: string | undefined,
   token: unknown,
   expectedAction: string,
-  hostnameAllowlist: string,
+  hostnameAllowlist: string | undefined,
   remoteIp: string
 ): Promise<boolean> {
   if (typeof token !== "string" || token.length === 0 || token.length > 2048) return false;
+  // Missing config fails closed (form rejected) rather than crashing.
+  if (!secret) return false;
 
   const expectedHostnames = new Set(
-    hostnameAllowlist
+    (hostnameAllowlist ?? "")
       .split(",")
       .map((hostname) => hostname.trim())
       .filter(Boolean)

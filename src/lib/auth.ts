@@ -38,7 +38,10 @@ async function hmac(secret: string, message: string) {
 // derived deterministically from AUTH_SECRET rather than stored separately
 // — this means ADMIN_PASSWORD_HASH must be regenerated (via
 // `npm run hash-password`) whenever AUTH_SECRET is rotated.
-const PBKDF2_ITERATIONS = 600_000;
+// Capped at 100,000: the deployed Workers runtime rejects anything higher
+// (local `wrangler dev` doesn't enforce the cap, so a bigger number only
+// breaks once deployed). Keep scripts/hash-password.mjs in sync.
+const PBKDF2_ITERATIONS = 100_000;
 
 async function passwordSalt(authSecret: string) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`pbkdf2-salt:${authSecret}`));
@@ -95,15 +98,16 @@ async function verifySessionToken(token: string, secret: string): Promise<boolea
 }
 
 // The owner account (env vars, optional) is checked first, then the
-// staff_users table. An unknown email still runs one PBKDF2 derivation so
-// response timing doesn't reveal which emails have accounts.
+// staff_users table — so the same email can exist in both without the
+// owner entry shadowing the staff one. An unknown email still runs one
+// PBKDF2 derivation so response timing doesn't reveal which emails exist.
 async function verifyCredentials(env: Env, email: string, password: string) {
   const normalized = email.trim().toLowerCase();
 
   const ownerEmail = env.ADMIN_EMAIL?.trim().toLowerCase();
   if (ownerEmail && env.ADMIN_PASSWORD_HASH && normalized === ownerEmail) {
     const candidate = await derivePasswordHash(password, await passwordSalt(env.AUTH_SECRET));
-    return timingSafeEqual(candidate, fromHex(env.ADMIN_PASSWORD_HASH));
+    if (timingSafeEqual(candidate, fromHex(env.ADMIN_PASSWORD_HASH))) return true;
   }
 
   const [staff] = await getDb(env.DB).select().from(staffUsers).where(eq(staffUsers.email, normalized)).limit(1);
