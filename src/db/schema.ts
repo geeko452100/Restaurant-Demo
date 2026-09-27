@@ -104,6 +104,54 @@ export const reservations = sqliteTable(
   })
 );
 
+// Online pickup orders. The customer never touches a payment form — staff
+// collect cash or card at the counter and record it from the admin
+// Orders board, which is what flips paymentStatus to "Paid".
+export const orderStatus = ["New", "Preparing", "Ready", "Completed", "Cancelled"] as const;
+export type OrderStatus = (typeof orderStatus)[number];
+export const paymentMethods = ["Cash", "Card"] as const;
+export type PaymentMethod = (typeof paymentMethods)[number];
+
+export const orders = sqliteTable(
+  "orders",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    // Unguessable id handed to the customer for the status tracker, so
+    // order numbers (sequential) can't be used to look up other orders.
+    publicId: text("public_id").notNull().unique(),
+    customerName: text("customer_name").notNull(),
+    phone: text("phone").notNull(),
+    pickupTime: text("pickup_time"), // HH:MM Central, null = ASAP
+    notes: text("notes"),
+    status: text("status", { enum: orderStatus }).notNull().default("New"),
+    subtotal: real("subtotal").notNull(),
+    tax: real("tax").notNull(),
+    total: real("total").notNull(),
+    paymentStatus: text("payment_status", { enum: ["Unpaid", "Paid"] }).notNull().default("Unpaid"),
+    paymentMethod: text("payment_method", { enum: paymentMethods }),
+    paidAt: text("paid_at"),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(CURRENT_TIMESTAMP)`),
+  },
+  (table) => ({
+    createdAtIdx: index("orders_created_at_idx").on(table.createdAt),
+  })
+);
+
+// Name and price are copied from the menu at checkout, so later menu
+// edits (or deletes) never rewrite what a customer was charged.
+export const orderItems = sqliteTable("order_items", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  orderId: integer("order_id")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  menuItemId: integer("menu_item_id"),
+  name: text("name").notNull(),
+  unitPrice: real("unit_price").notNull(),
+  quantity: integer("quantity").notNull(),
+});
+
 export type MenuCategory = typeof menuCategories.$inferSelect;
 export type NewMenuCategory = typeof menuCategories.$inferInsert;
 export type MenuItem = typeof menuItems.$inferSelect;
@@ -114,3 +162,5 @@ export type BandApplication = typeof bandApplications.$inferSelect;
 export type NewBandApplication = typeof bandApplications.$inferInsert;
 export type Reservation = typeof reservations.$inferSelect;
 export type NewReservation = typeof reservations.$inferInsert;
+export type Order = typeof orders.$inferSelect;
+export type OrderItem = typeof orderItems.$inferSelect;

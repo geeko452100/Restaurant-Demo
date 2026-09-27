@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { secureHeaders } from "hono/secure-headers";
-import { and, eq, isNotNull } from "drizzle-orm";
+import { and, eq, inArray, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import type { Env } from "./env";
 import { getDb } from "./db/index";
@@ -11,6 +11,8 @@ import {
   getTodaysSpecial,
   getBookedSeatNumbers,
   getUpcomingReservations,
+  getOrdersForBoard,
+  getOrderByPublicId,
   nowCentral,
   todayCentralISO,
 } from "./db/queries";
@@ -21,6 +23,10 @@ import {
   menuCategories,
   menuCategorySections,
   menuItems,
+  orderItems,
+  orders,
+  orderStatus,
+  paymentMethods,
   reservations,
 } from "./db/schema";
 import { login, logout, isAuthenticated, requireAuth } from "./lib/auth";
@@ -28,7 +34,11 @@ import { notifyOwnerOfBandApplication } from "./lib/mailer";
 import { checkRateLimit } from "./lib/rateLimit";
 import { sendReservationSms } from "./lib/reservationNotify";
 import { SEAT_LAYOUT, findSeat } from "./lib/seatLayout";
+<<<<<<< HEAD
 import { verifyTurnstile } from "./lib/turnstile";
+=======
+import { TAX_RATE, isOrderable, priceOrder } from "./lib/orders";
+>>>>>>> 84a24cc (feat: implement online ordering system with cart functionality)
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -472,13 +482,162 @@ app.delete("/api/reservations/:id", requireAuth, async (c) => {
   return c.json({ ok: true });
 });
 
+// ---------- Online orders ----------
+
+// The public order page's menu: only what can actually be ordered for
+// pickup right now (see isOrderable), grouped like the regular menu.
+app.get("/api/orders/menu", async (c) => {
+  const { dayOfWeek } = nowCentral();
+  const menu = await getMenuByCategory(getDb(c.env.DB));
+  const categories = menu
+    .map((category) => ({ ...category, items: category.items.filter((item) => isOrderable(item, dayOfWeek)) }))
+    .filter((category) => category.items.length > 0);
+  return c.json({ categories, taxRate: TAX_RATE });
+});
+
+const newOrderSchema = z.object({
+  customerName: z.string().trim().min(1).max(100),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[0-9\s()-]{7,20}$/, "Enter a valid phone number"),
+  pickupTime: timeSchema.optional(),
+  notes: z.string().trim().max(300).optional(),
+  items: z
+    .array(
+      z.object({
+        menuItemId: z.number().int().positive(),
+        quantity: z.number().int().min(1).max(20),
+      })
+    )
+    .min(1, "Your order is empty.")
+    .max(30),
+});
+
+app.post("/api/orders", async (c) => {
+  const body = await c.req.json().catch(() => null);
+  const parsed = newOrderSchema.safeParse(body);
+  if (!parsed.success) {
+    return c.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, 400);
+  }
+
+  const { customerName, phone, pickupTime, notes, items } = parsed.data;
+  const { dayOfWeek, hour } = nowCentral();
+  if (pickupTime) {
+    const [h, m] = pickupTime.split(":").map(Number);
+    if (h + m / 60 < hour) return c.json({ error: "That pickup time has already passed." }, 400);
+  }
+
+  // Merge duplicate lines, then price everything from the database — the
+  // client's idea of names/prices is never trusted.
+  const quantities = new Map<number, number>();
+  for (const line of items) {
+    quantities.set(line.menuItemId, (quantities.get(line.menuItemId) ?? 0) + line.quantity);
+  }
+
+  const db = getDb(c.env.DB);
+  const menuRows = await db
+    .select()
+    .from(menuItems)
+    .where(inArray(menuItems.id, [...quantities.keys()]));
+
+  const lines = [];
+  for (const [menuItemId, quantity] of quantities) {
+    const item = menuRows.find((row) => row.id === menuItemId);
+    if (!item || !isOrderable(item, dayOfWeek)) {
+      return c.json({ error: `${item?.name ?? "An item in your cart"} isn't available right now.` }, 409);
+    }
+    lines.push({ menuItemId, name: item.name, unitPrice: item.price, quantity });
+  }
+
+  const totals = priceOrder(lines);
+  const [order] = await db
+    .insert(orders)
+    .values({ publicId: crypto.randomUUID(), customerName, phone, pickupTime, notes: notes || null, ...totals })
+    .returning();
+
+  try {
+    await db.insert(orderItems).values(lines.map((line) => ({ ...line, orderId: order.id })));
+  } catch (err) {
+    await db.delete(orders).where(eq(orders.id, order.id));
+    throw err;
+  }
+
+  return c.json({ id: order.id, publicId: order.publicId, total: order.total }, 201);
+});
+
+// Customer-facing status tracker, keyed by the unguessable publicId from
+// checkout. Phone number is left out since this link is shareable.
+app.get("/api/orders/track/:publicId", async (c) => {
+  const order = await getOrderByPublicId(getDb(c.env.DB), c.req.param("publicId"));
+  if (!order) return c.json({ error: "Order not found" }, 404);
+  const { phone: _phone, ...publicOrder } = order;
+  return c.json(publicOrder);
+});
+
+app.get("/api/orders", requireAuth, async (c) => {
+  const board = await getOrdersForBoard(getDb(c.env.DB));
+  return c.json(board);
+});
+
+const orderStatusUpdateSchema = z.object({ status: z.enum(orderStatus) });
+
+app.patch("/api/orders/:id", requireAuth, async (c) => {
+  const orderId = Number(c.req.param("id"));
+  if (!Number.isInteger(orderId)) return c.json({ error: "Invalid order id" }, 400);
+
+  const body = await c.req.json().catch(() => null);
+  const parsed = orderStatusUpdateSchema.safeParse(body);
+  if (!parsed.success) return c.json({ error: "Invalid order status" }, 400);
+
+  const db = getDb(c.env.DB);
+  const [existing] = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
+  if (!existing) return c.json({ error: "Order not found" }, 404);
+  if (parsed.data.status === "Completed" && existing.paymentStatus !== "Paid") {
+    return c.json({ error: "Collect payment before marking the order picked up." }, 409);
+  }
+
+  const [updated] = await db
+    .update(orders)
+    .set({ status: parsed.data.status })
+    .where(eq(orders.id, orderId))
+    .returning();
+  return c.json(updated);
+});
+
+const paymentSchema = z.object({ method: z.enum(paymentMethods) });
+
+// Staff record a cash or card payment taken at the counter.
+app.post("/api/orders/:id/payment", requireAuth, async (c) => {
+  const orderId = Number(c.req.param("id"));
+  if (!Number.isInteger(orderId)) return c.json({ error: "Invalid order id" }, 400);
+
+  const body = await c.req.json().catch(() => null);
+  const parsed = paymentSchema.safeParse(body);
+  if (!parsed.success) return c.json({ error: "method must be Cash or Card" }, 400);
+
+  const db = getDb(c.env.DB);
+  const [existing] = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
+  if (!existing) return c.json({ error: "Order not found" }, 404);
+  if (existing.status === "Cancelled") return c.json({ error: "That order was cancelled." }, 409);
+  if (existing.paymentStatus === "Paid") return c.json({ error: "That order is already paid." }, 409);
+
+  const [updated] = await db
+    .update(orders)
+    .set({ paymentStatus: "Paid", paymentMethod: parsed.data.method, paidAt: new Date().toISOString() })
+    .where(eq(orders.id, orderId))
+    .returning();
+  return c.json(updated);
+});
+
 // ---------- Scheduled: cosmetic "servings remaining" auto-decrement ----------
 //
-// Purely a demo flourish, not real inventory tracking — there's no order
-// system behind it. Only ticks down tracked drinks (abv set,
-// servingsRemaining not null) during a plausible open window in Central
-// Time, and flips isAvailable off at zero. The admin CMS is how an owner
-// "restocks" (resets servingsRemaining) after a keg change.
+// Purely a demo flourish, not real inventory tracking — online orders are
+// food and non-alcoholic only, so no pours flow through them. Only ticks
+// down tracked drinks (abv set, servingsRemaining not null) during a
+// plausible open window in Central Time, and flips isAvailable off at
+// zero. The admin CMS is how an owner "restocks" (resets
+// servingsRemaining) after a keg change.
 const OPEN_HOUR = 11;
 const CLOSE_HOUR = 23;
 

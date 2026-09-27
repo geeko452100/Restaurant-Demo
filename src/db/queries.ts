@@ -1,6 +1,15 @@
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, notInArray, or, sql } from "drizzle-orm";
 import type { Db } from "./index";
-import { bandApplications, events, menuCategories, menuItems, reservations } from "./schema";
+import {
+  bandApplications,
+  events,
+  menuCategories,
+  menuItems,
+  orderItems,
+  orders,
+  reservations,
+  type Order,
+} from "./schema";
 import { findSeat } from "../lib/seatLayout";
 
 // The restaurant operates on Central Time regardless of where the edge
@@ -157,4 +166,56 @@ export async function getUpcomingReservations(db: Db, date?: string) {
     const seat = findSeat(r.seatNumber);
     return { ...r, seatType: seat?.type ?? null, seatCapacity: seat?.capacity ?? null };
   });
+}
+
+// ---------- Online orders ----------
+
+// created_at is SQLite's CURRENT_TIMESTAMP ("YYYY-MM-DD HH:MM:SS", UTC);
+// convert it to the Central-Time calendar date the staff think in.
+export function centralDateOf(utcTimestamp: string) {
+  return centralDateFormatter.format(new Date(`${utcTimestamp.replace(" ", "T")}Z`));
+}
+
+const OPEN_ORDER_STATUSES = ["New", "Preparing", "Ready"] as const;
+
+async function attachItems(db: Db, rows: Order[]) {
+  if (!rows.length) return [];
+  const items = await db
+    .select()
+    .from(orderItems)
+    .where(
+      inArray(
+        orderItems.orderId,
+        rows.map((o) => o.id)
+      )
+    );
+  return rows.map((order) => ({ ...order, items: items.filter((item) => item.orderId === order.id) }));
+}
+
+// The staff board: every still-open order regardless of age (so nothing
+// gets lost overnight) plus anything placed today in Central Time.
+export async function getOrdersForBoard(db: Db) {
+  const rows = await db
+    .select()
+    .from(orders)
+    .where(
+      or(
+        notInArray(orders.status, ["Completed", "Cancelled"]),
+        sql`${orders.createdAt} >= datetime('now', '-2 days')`
+      )
+    )
+    .orderBy(desc(orders.createdAt));
+
+  const today = todayCentralISO();
+  const board = rows.filter(
+    (o) => (OPEN_ORDER_STATUSES as readonly string[]).includes(o.status) || centralDateOf(o.createdAt) === today
+  );
+  return attachItems(db, board);
+}
+
+export async function getOrderByPublicId(db: Db, publicId: string) {
+  const [order] = await db.select().from(orders).where(eq(orders.publicId, publicId)).limit(1);
+  if (!order) return null;
+  const [withItems] = await attachItems(db, [order]);
+  return withItems;
 }

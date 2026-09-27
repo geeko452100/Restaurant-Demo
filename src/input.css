@@ -518,6 +518,165 @@
     @apply border-none bg-transparent cursor-default hover:border-none;
   }
 
+  /* Online ordering (public /order page) */
+  .menu-item-card.is-in-cart {
+    @apply border-brand/70;
+  }
+  .add-btn {
+    @apply py-1.5 px-4 min-h-[40px] text-sm;
+  }
+  .qty-control {
+    @apply inline-flex items-center gap-2 rounded-full border border-border bg-panel/60 p-1 font-sans tabular-nums;
+  }
+  .qty-control button {
+    @apply w-8 h-8 min-h-0 p-0 rounded-full text-base leading-none flex items-center justify-center hover:translate-y-0;
+  }
+  .qty-control span {
+    @apply min-w-[1.25rem] text-center text-sm font-bold;
+  }
+  .cart-list {
+    @apply list-none m-0 p-0;
+  }
+  .cart-line {
+    @apply grid grid-cols-[1fr_auto_auto] items-center gap-3 py-3 border-b border-dashed border-border last:border-none;
+  }
+  .cart-line .beer-name {
+    @apply font-bold tracking-wide;
+  }
+  .cart-line .beer-style {
+    @apply text-muted text-sm;
+  }
+  .cart-line .beer-price {
+    @apply min-w-[4.5rem] text-right;
+  }
+  .order-totals {
+    @apply m-0 mt-2 pt-3 border-t border-border font-sans text-sm;
+  }
+  .order-totals > div {
+    @apply flex justify-between py-1 text-muted;
+  }
+  .order-totals dd {
+    @apply m-0 tabular-nums;
+  }
+  .order-totals .is-total {
+    @apply text-cream text-base font-bold pt-2;
+  }
+  .order-totals .is-total dd {
+    @apply text-accent brightness-150;
+  }
+  /* Floating "Review Order" pill, shown only while the cart card is
+     scrolled out of view. */
+  .cart-bar {
+    @apply fixed bottom-4 left-4 right-4 z-30 mx-auto max-w-md flex items-center justify-between gap-3 py-3 px-5 rounded-full bg-brand text-bg font-sans font-bold text-sm no-underline shadow-xl shadow-black/50 hover:bg-brand-bright;
+  }
+  .order-status-message {
+    @apply text-xl font-display text-cream;
+  }
+  .order-status-message.is-ready {
+    @apply text-[#8fc98f];
+  }
+  .order-steps {
+    @apply list-none m-0 my-5 p-0 grid grid-cols-4 gap-1.5 font-sans text-xs text-muted text-center;
+  }
+  .order-steps li {
+    @apply pt-3 border-t-4 border-border;
+  }
+  .order-steps li.is-done {
+    @apply border-brand/60 text-cream;
+  }
+  .order-steps li.is-current {
+    @apply border-brand text-brand-bright font-bold;
+  }
+
+  /* Staff order board (/admin/orders) */
+  .stat-row {
+    @apply grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5;
+  }
+  .stat-tile {
+    @apply bg-panel-2 border border-border rounded-lg p-4;
+  }
+  .stat-value {
+    @apply font-display text-2xl text-cream tabular-nums;
+  }
+  .stat-label {
+    @apply font-sans text-xs text-muted tracking-wide uppercase mt-1;
+  }
+  .filter-tabs {
+    @apply flex gap-2 flex-wrap mb-4;
+  }
+  .filter-tabs button {
+    @apply py-1.5 px-4 min-h-[40px] text-sm bg-transparent text-muted border border-border shadow-none hover:translate-y-0 hover:bg-transparent hover:text-brand-bright;
+  }
+  .filter-tabs button.is-active {
+    @apply border-brand text-brand-bright bg-brand/[.12];
+  }
+  .order-board {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  }
+  .order-ticket {
+    @apply relative flex flex-col gap-3 bg-panel-2 border border-border rounded-lg p-4 pl-5 font-sans;
+  }
+  .order-ticket::before {
+    content: "";
+    @apply absolute left-0 top-4 bottom-4 w-1 rounded-full bg-brand/60;
+  }
+  .order-ticket.is-new::before {
+    @apply bg-brand animate-pulse;
+  }
+  .order-ticket.is-ready::before {
+    @apply bg-green;
+  }
+  .order-ticket.is-closed {
+    @apply opacity-60;
+  }
+  .order-ticket.is-closed::before {
+    @apply bg-border;
+  }
+  .order-ticket-header {
+    @apply flex items-start justify-between gap-3;
+  }
+  .order-ticket-number {
+    @apply font-display text-xl text-cream leading-none;
+  }
+  .order-ticket-meta {
+    @apply text-xs text-muted mt-1;
+  }
+  .order-ticket-items {
+    @apply list-none m-0 p-0 text-sm;
+  }
+  .order-ticket-items li {
+    @apply flex justify-between gap-3 py-1 border-b border-dashed border-border last:border-none;
+  }
+  .order-ticket-notes {
+    @apply text-sm text-accent brightness-150 italic;
+  }
+  .order-ticket-footer {
+    @apply flex items-center justify-between gap-2 flex-wrap pt-1;
+  }
+  .order-ticket-actions {
+    @apply flex gap-1.5 flex-wrap;
+  }
+  .order-ticket-actions button {
+    @apply py-1.5 px-3 min-h-[40px] text-sm;
+  }
+  .status-pill.is-new {
+    @apply bg-brand/[.15] text-brand-bright border border-brand/40;
+  }
+  .status-pill.is-preparing {
+    @apply bg-wood/60 text-[#e0b98a] border border-[#e0b98a]/30;
+  }
+  .status-pill.is-ready,
+  .status-pill.is-paid {
+    @apply bg-green/[.18] text-[#8fc98f] border border-green/40;
+  }
+  .status-pill.is-completed {
+    @apply bg-white/5 text-muted border border-border;
+  }
+  .status-pill.is-cancelled,
+  .status-pill.is-unpaid {
+    @apply bg-red/[.18] text-[#e0897a] border border-red/40;
+  }
+
   /* Admin tables */
   .admin-table {
     @apply w-full border-collapse text-sm font-sans;

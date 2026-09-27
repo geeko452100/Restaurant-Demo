@@ -1,6 +1,7 @@
 const rootEl = document.getElementById("menu-root");
 const statusEl = document.getElementById("menu-status");
 const categorySelect = document.getElementById("itemCategoryId");
+const specialsWeekEl = document.getElementById("specials-week");
 
 const itemForm = document.getElementById("item-form");
 const itemFormTitle = document.getElementById("item-form-title");
@@ -30,6 +31,7 @@ async function loadMenu() {
     const menu = await res.json();
     currentMenu = menu;
     populateCategorySelect(menu);
+    renderSpecialsWeek(menu);
     renderMenu(menu);
   } catch {
     rootEl.innerHTML = `<p class="empty-note">Couldn't load the menu right now.</p>`;
@@ -43,6 +45,60 @@ function populateCategorySelect(menu) {
     .map((category) => `<option value="${category.id}">${escapeHtml(category.name)}</option>`)
     .join("");
   if (selected) categorySelect.value = selected;
+}
+
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+function centralDayOfWeek() {
+  const weekday = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", weekday: "long" }).format(new Date());
+  return DAY_NAMES.indexOf(weekday);
+}
+
+function renderSpecialsWeek(menu) {
+  const specials = menu.flatMap((c) => c.items).filter((item) => item.dayOfWeek != null);
+  const today = centralDayOfWeek();
+
+  specialsWeekEl.innerHTML = DAY_NAMES.map((day, dayOfWeek) => {
+    const items = specials.filter((item) => item.dayOfWeek === dayOfWeek);
+    const body = items.length
+      ? items
+          .map((item) => {
+            const state = !item.isActive ? " (hidden)" : !item.isAvailable ? " (86'd)" : "";
+            return `
+              <div class="flex items-center justify-between gap-3 flex-wrap">
+                <span class="week-day-event">${escapeHtml(item.name)} &middot; $${item.price.toFixed(2)}${state}</span>
+                <button type="button" class="secondary" data-edit-item="${item.id}">Edit</button>
+              </div>`;
+          })
+          .join("")
+      : `<div class="flex items-center justify-between gap-3 flex-wrap">
+           <span class="week-day-empty">No special</span>
+           <button type="button" class="secondary" data-add-special="${dayOfWeek}">Add Special</button>
+         </div>`;
+    return `
+      <li class="week-day${dayOfWeek === today ? " is-today" : ""}">
+        <span class="week-day-label">${day}${dayOfWeek === today ? " &middot; Today" : ""}</span>
+        <div class="week-day-body flex-1">${body}</div>
+      </li>`;
+  }).join("");
+
+  specialsWeekEl.querySelectorAll("button[data-edit-item]").forEach((btn) => {
+    btn.addEventListener("click", () => startEditItem(btn.dataset.editItem));
+  });
+  specialsWeekEl.querySelectorAll("button[data-add-special]").forEach((btn) => {
+    btn.addEventListener("click", () => startAddSpecial(Number(btn.dataset.addSpecial), specials));
+  });
+}
+
+// Pre-fills the item form for a new special on that day, defaulting the
+// category to wherever the existing specials live.
+function startAddSpecial(dayOfWeek, specials) {
+  resetItemForm();
+  if (specials.length) itemForm.categoryId.value = specials[0].categoryId;
+  itemForm.dayOfWeek.value = dayOfWeek;
+  itemFormTitle.textContent = `Add a ${DAY_NAMES[dayOfWeek]} Special`;
+  itemForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  itemForm.name.focus({ preventScroll: true });
 }
 
 function renderMenu(menu) {
