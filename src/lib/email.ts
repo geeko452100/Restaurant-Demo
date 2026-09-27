@@ -6,10 +6,9 @@ export interface SendEmailResult {
   error?: string;
 }
 
-// Thin wrapper around Resend's transactional email HTTP API. Used both for
-// real emails (owner notifications) and for email-to-SMS gateway addresses
-// (reservation confirmations), since carrier gateways just treat the body
-// of a plain email as the text message.
+// Thin wrapper around Resend's transactional email HTTP API. Used to send
+// reservation confirmations to email-to-SMS gateway addresses, since
+// carrier gateways just treat the body of a plain email as the text message.
 //
 // Resend requires sending `from` a domain you've verified on your Resend
 // account (https://resend.com/domains) — set RESEND_FROM_EMAIL once you

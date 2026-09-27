@@ -16,14 +16,12 @@ AUTH_SECRET=
 # back to a console-logged stub when unset.
 VERIPHONE_API_KEY=
 
-# Resend (https://resend.com) - sends the reservation gateway "text" and
-# notifies the owner of new band applications. Falls back to a
-# console-logged stub when unset. RESEND_FROM_EMAIL must be on a domain
+# Resend (https://resend.com) - sends the reservation gateway "text".
+# Falls back to a console-logged stub when unset. RESEND_FROM_EMAIL must be on a domain
 # you've verified in your Resend account (https://resend.com/domains) -
 # a live domain is required before this will actually send anything.
 RESEND_API_KEY=
 RESEND_FROM_EMAIL=
-OWNER_NOTIFICATION_EMAIL=
 
 # Turnstile (https://developers.cloudflare.com/turnstile/) - bot protection
 TURNSTILE_SECRET=

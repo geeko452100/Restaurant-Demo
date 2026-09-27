@@ -67,22 +67,6 @@ export const events = sqliteTable(
   })
 );
 
-export const bandApplicationStatus = ["Pending", "Reviewed", "Booked"] as const;
-export type BandApplicationStatus = (typeof bandApplicationStatus)[number];
-
-export const bandApplications = sqliteTable("band_applications", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  bandName: text("band_name").notNull(),
-  genre: text("genre").notNull(),
-  rate: real("rate"),
-  email: text("email").notNull(),
-  mediaLink: text("media_link").notNull(),
-  status: text("status", { enum: bandApplicationStatus }).notNull().default("Pending"),
-  submittedAt: text("submitted_at")
-    .notNull()
-    .default(sql`(CURRENT_TIMESTAMP)`),
-});
-
 export const reservations = sqliteTable(
   "reservations",
   {
@@ -172,8 +156,6 @@ export type MenuItem = typeof menuItems.$inferSelect;
 export type NewMenuItem = typeof menuItems.$inferInsert;
 export type Event = typeof events.$inferSelect;
 export type NewEvent = typeof events.$inferInsert;
-export type BandApplication = typeof bandApplications.$inferSelect;
-export type NewBandApplication = typeof bandApplications.$inferInsert;
 export type Reservation = typeof reservations.$inferSelect;
 export type NewReservation = typeof reservations.$inferInsert;
 export type Order = typeof orders.$inferSelect;

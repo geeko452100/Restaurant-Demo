@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
 <title>Acme Restaurant - Calendar</title>
-<meta name="description" content="This month's live music and events at Acme Restaurant." />
+<meta name="description" content="This month's events and specials at Acme Restaurant." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -42,7 +42,7 @@
 <main>
   <section class="card">
     <div class="calendar-admin-bar hidden" id="calendar-admin-bar">
-      Signed in as staff &mdash; tap a day to add a show, or tap an existing show to edit it.
+      Signed in as staff &mdash; tap a day to add an event, or tap an existing event to edit it.
     </div>
 
     <div class="calendar-header">
@@ -57,7 +57,7 @@
 
     <form id="event-form" class="calendar-event-form hidden">
       <input type="hidden" id="eventId" name="eventId" />
-      <h2 id="event-form-title">Add a Show</h2>
+      <h2 id="event-form-title">Add an Event</h2>
       <div class="field">
         <label for="title">Title</label>
         <input type="text" id="title" name="title" required />
@@ -71,7 +71,7 @@
         <input type="time" id="startTime" name="startTime" />
       </div>
       <div class="field">
-        <label for="coverCharge">Cover charge ($)</label>
+        <label for="coverCharge">Price per person ($, 0 = free)</label>
         <input type="number" id="coverCharge" name="coverCharge" min="0" step="1" value="0" />
       </div>
       <div class="field">
@@ -86,7 +86,7 @@
   </section>
 </main>
 
-<div class="staff-divider" aria-hidden="true"></div>
+<div class="section-divider" aria-hidden="true"></div>
 <footer class="site-footer"><a href="admin/login.html">Staff Login</a></footer>
 
 <script src="js/nav.js"></script>

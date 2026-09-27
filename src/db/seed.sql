@@ -63,26 +63,18 @@ INSERT INTO menu_items (category_id, name, description, price, abv, image_url, d
   (7, 'Fresh Lemonade', 'Free refills', 2.75, 0.0, NULL, NULL, 1, 1, 0, 1, 3, NULL),
   (7, 'Coffee', 'Regular or decaf', 2.50, 0.0, NULL, NULL, 1, 1, 0, 1, 4, NULL);
 
--- Real weekly programming from the venue's own promo flyer (Open Mic
--- Wednesdays, Karaoke w/ DJ Big D Thursdays, Adults-Only Karaoke
--- Saturdays). Seeded as the next three occurrences of each — these are
--- the dated "Special Events" that surface in the /events hero and the
--- /calendar grid. The recurring Friday/Saturday house-band schedule
--- shown alongside them on /events is static copy, not DB-backed.
+-- Demo food events (all fictional). These are the dated "Special Events"
+-- that surface in the /events hero, the /calendar grid, and the homepage
+-- "tonight" banner. cover_charge is the per-person ticket price (0 = free).
 INSERT INTO events (title, description, event_date, start_time, cover_charge, image_url) VALUES
-  ('Open Mic Night', 'All talent welcome — bring your guitar, your voice, or just come watch.', '2026-08-19', '19:00', 0.00, NULL),
-  ('Karaoke Night with DJ Big D', 'You be the star! Karaoke hosted by DJ Big D.', '2026-08-20', '20:00', 0.00, '/assets/karaoke.webp'),
-  ('Adults Only Karaoke Night', '18+ only, ID required. Sing your heart out.', '2026-08-22', '20:00', 0.00, '/assets/karaoke.webp'),
-  ('Open Mic Night', 'All talent welcome — bring your guitar, your voice, or just come watch.', '2026-08-26', '19:00', 0.00, NULL),
-  ('Karaoke Night with DJ Big D', 'You be the star! Karaoke hosted by DJ Big D.', '2026-08-27', '20:00', 0.00, '/assets/karaoke.webp'),
-  ('Adults Only Karaoke Night', '18+ only, ID required. Sing your heart out.', '2026-08-29', '20:00', 0.00, '/assets/karaoke.webp'),
-  ('Open Mic Night', 'All talent welcome — bring your guitar, your voice, or just come watch.', '2026-09-02', '19:00', 0.00, NULL),
-  ('Karaoke Night with DJ Big D', 'You be the star! Karaoke hosted by DJ Big D.', '2026-09-03', '20:00', 0.00, '/assets/karaoke.webp'),
-  ('Adults Only Karaoke Night', '18+ only, ID required. Sing your heart out.', '2026-09-05', '20:00', 0.00, '/assets/karaoke.webp');
-
-INSERT INTO band_applications (band_name, genre, rate, email, media_link, status) VALUES
-  ('The Wandering Embers', 'Folk rock', 250.00, 'embers@example.com', 'https://open.spotify.com/artist/example1', 'Pending'),
-  ('Static Harbor', 'Surf punk', 300.00, 'staticharbor@example.com', 'https://youtube.com/@statichabor', 'Reviewed');
+  ('Taco Tuesday', 'Build-your-own street tacos, fresh salsa bar, and $2 off all appetizers.', '2026-10-06', '17:00', 0.00, '/assets/png/nachos.png'),
+  ('Harvest Wine Pairing Dinner', 'Four courses of fall comfort food, each paired with a hand-picked wine.', '2026-10-09', '18:30', 45.00, '/assets/png/drink.png'),
+  ('Burger Build-Off', 'Our cooks go head to head on a new house burger. You taste, you vote.', '2026-10-15', '18:00', 0.00, '/assets/png/burger.png'),
+  ('Chili Cook-Off', 'Six chilis, one crown. Grab a tasting flight and cast your ballot.', '2026-10-17', '12:00', 10.00, NULL),
+  ('Sunday Brunch Launch', 'The first weekend of our new brunch menu: biscuits and gravy, hash, and bottomless coffee.', '2026-10-25', '10:00', 0.00, NULL),
+  ('Chef''s Tasting Menu', 'A seven-course tasting menu from the kitchen, one seating only. Reserve a table.', '2026-10-30', '19:00', 60.00, NULL),
+  ('Kids Eat Free Night', 'One free kids'' meal with every adult entrée.', '2026-11-04', '16:00', 0.00, '/assets/png/burger.png'),
+  ('Thanksgiving Pie Pickup', 'Pre-order pumpkin, apple, or pecan pies and pick them up warm.', '2026-11-24', '11:00', 0.00, NULL);
 
 -- Demo staff login for /admin: staff@example.com / Password123!
 -- Generated with: npm run hash-password -- --staff staff@example.com 'Password123!'

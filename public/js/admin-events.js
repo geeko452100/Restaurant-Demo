@@ -85,7 +85,7 @@ function startEditEvent(id) {
 function resetForm() {
   formEl.reset();
   formEl.eventId.value = "";
-  formTitleEl.textContent = "Add a Show";
+  formTitleEl.textContent = "Add an Event";
   submitBtnEl.textContent = "Add to Calendar";
   cancelBtnEl.classList.add("hidden");
 }

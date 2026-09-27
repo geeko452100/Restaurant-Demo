@@ -1,0 +1,1 @@
+DROP TABLE `band_applications`;

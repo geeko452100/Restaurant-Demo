@@ -70,10 +70,10 @@
 
     if (tonightsEvent) {
       const timeLabel = tonightsEvent.startTime ? ` · ${formatTime12h(tonightsEvent.startTime)}` : "";
-      const coverLabel = tonightsEvent.coverCharge > 0 ? `$${tonightsEvent.coverCharge.toFixed(2)} cover` : "No cover";
+      const coverLabel = tonightsEvent.coverCharge > 0 ? `$${tonightsEvent.coverCharge.toFixed(2)} per person` : "Free";
       render({
         eyebrowClass: "is-live",
-        eyebrowText: "LIVE TONIGHT",
+        eyebrowText: "TONIGHT",
         title: `${tonightsEvent.title}${timeLabel}`,
         meta: coverLabel,
         imageUrl: tonightsEvent.imageUrl,
@@ -97,11 +97,11 @@
 
     render({
       eyebrowClass: "is-quiet",
-      eyebrowText: "NO EVENT TONIGHT",
-      title: "No schedule, no cover, just good times",
-      meta: "Pool, darts, and the jukebox are always on.",
-      imageUrl: "/assets/png/pool_table.png",
-      imageAvifUrl: "/assets/avif/pool_table.avif",
+      eyebrowText: "THE KITCHEN'S OPEN",
+      title: "Burgers, nachos, and cold drinks all day",
+      meta: "Order online for pickup, or grab a table.",
+      imageUrl: "/assets/png/burger.png",
+      imageAvifUrl: "/assets/avif/burger.avif",
       showPulse: false,
     });
   }

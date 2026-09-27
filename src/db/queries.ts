@@ -1,7 +1,6 @@
 import { and, asc, desc, eq, inArray, notInArray, or, sql } from "drizzle-orm";
 import type { Db } from "./index";
 import {
-  bandApplications,
   events,
   menuCategories,
   menuItems,
@@ -116,10 +115,6 @@ export async function getTodaysSpecial(db: Db) {
     .limit(1);
 
   return { special: special ?? null, isLunchWindow, today: todayCentralISO() };
-}
-
-export async function getBandApplications(db: Db) {
-  return db.select().from(bandApplications).orderBy(desc(bandApplications.submittedAt));
 }
 
 // ---------- Reservations ----------

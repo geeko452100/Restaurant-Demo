@@ -1,6 +1,4 @@
 const gridEl = document.getElementById("event-grid");
-const formEl = document.getElementById("band-form");
-const statusEl = document.getElementById("band-status");
 const heroTitleEl = document.getElementById("special-events-title");
 const heroSubtitleEl = document.getElementById("special-events-subtitle");
 
@@ -22,25 +20,25 @@ function renderHero(events) {
   const next = events[0];
   if (!next) {
     heroTitleEl.textContent = "More Special Events Coming Soon";
-    heroSubtitleEl.textContent = "Check back soon, or see our regular Friday and Saturday night lineup below.";
+    heroSubtitleEl.textContent = "Tasting nights, cook-offs, and seasonal dinners are on the way. Check back soon.";
     return;
   }
 
   const timeLabel = next.startTime ? ` &middot; ${formatTime12h(next.startTime)}` : "";
-  const coverLabel = next.coverCharge > 0 ? `$${next.coverCharge.toFixed(2)} cover` : "No cover";
+  const coverLabel = next.coverCharge > 0 ? `$${next.coverCharge.toFixed(2)} per person` : "Free";
   heroTitleEl.textContent = next.title;
   heroSubtitleEl.innerHTML = `${formatDate(next.eventDate)}${timeLabel} &middot; ${coverLabel}${next.description ? ` &mdash; ${escapeHtml(next.description)}` : ""}`;
 }
 
 function renderEvents(events) {
   if (!events.length) {
-    gridEl.innerHTML = `<p class="empty-note">No upcoming shows yet &mdash; check back soon.</p>`;
+    gridEl.innerHTML = `<p class="empty-note">No upcoming events yet &mdash; check back soon.</p>`;
     return;
   }
 
   gridEl.innerHTML = events
     .map((event) => {
-      const coverLabel = event.coverCharge > 0 ? `$${event.coverCharge.toFixed(2)} cover` : "No cover";
+      const coverLabel = event.coverCharge > 0 ? `$${event.coverCharge.toFixed(2)} per person` : "Free";
       const timeLabel = event.startTime ? `${formatTime12h(event.startTime)} &middot; ` : "";
       return `
         <a class="event-card" href="reserve.html?date=${encodeURIComponent(event.eventDate)}" title="Reserve a table for ${escapeAttr(event.title)}">
@@ -76,53 +74,5 @@ function escapeHtml(str) {
 function escapeAttr(str) {
   return escapeHtml(str).replace(/"/g, "&quot;");
 }
-
-function showStatus(message, type) {
-  statusEl.textContent = message;
-  statusEl.className = `status-msg show ${type}`;
-}
-
-formEl.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const data = new FormData(formEl);
-  const rate = String(data.get("rate") || "").trim();
-  const turnstileToken = String(data.get("cf-turnstile-response") || "");
-  if (!turnstileToken) {
-    showStatus("Please complete the verification.", "error");
-    return;
-  }
-
-  const payload = {
-    bandName: String(data.get("bandName") || "").trim(),
-    genre: String(data.get("genre") || "").trim(),
-    rate: rate ? Number(rate) : undefined,
-    email: String(data.get("email") || "").trim(),
-    mediaLink: String(data.get("mediaLink") || "").trim(),
-    turnstileToken,
-  };
-
-  const submitBtn = formEl.querySelector("button");
-  submitBtn.disabled = true;
-
-  try {
-    const res = await fetch("/api/bands", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const result = await res.json();
-    if (!res.ok) {
-      showStatus(result.error || "Couldn't submit your application.", "error");
-      return;
-    }
-    showStatus(`Thanks, ${payload.bandName}! We'll be in touch.`, "success");
-    formEl.reset();
-  } catch {
-    showStatus("Something went wrong. Please try again.", "error");
-  } finally {
-    window.turnstile?.reset("turnstile-bands");
-    submitBtn.disabled = false;
-  }
-});
 
 loadEvents();

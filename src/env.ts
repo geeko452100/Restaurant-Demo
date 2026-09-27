@@ -14,7 +14,7 @@ export interface Env {
   PUBLIC_FORM_RATE_LIMITER: RateLimit;
 
   // Turnstile (https://developers.cloudflare.com/turnstile/) - bot
-  // protection on the public reservation and band-application forms (see
+  // protection on the public reservation form (see
   // src/lib/turnstile.ts). TURNSTILE_HOSTNAMES is a comma-separated
   // allowlist of frontend hostnames siteverify may report back.
   TURNSTILE_SECRET: string;
@@ -27,5 +27,4 @@ export interface Env {
   // a domain verified in your Resend account.
   RESEND_API_KEY?: string;
   RESEND_FROM_EMAIL?: string;
-  OWNER_NOTIFICATION_EMAIL?: string;
 }

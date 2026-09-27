@@ -143,7 +143,7 @@ function openForm(event) {
   formEl.coverCharge.value = event.coverCharge ?? 0;
   formEl.description.value = event.description || "";
 
-  formTitleEl.textContent = event.id ? `Edit "${event.title}"` : "Add a Show";
+  formTitleEl.textContent = event.id ? `Edit "${event.title}"` : "Add an Event";
   submitBtnEl.textContent = event.id ? "Save Changes" : "Add to Calendar";
   deleteBtnEl.classList.toggle("hidden", !event.id);
   statusEl.className = "status-msg";

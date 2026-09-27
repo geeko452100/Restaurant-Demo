@@ -38,7 +38,7 @@
   <a href="/reserve">Reserve a Table</a>
 </div>
 
-<section class="hero" id="special-events-hero" style="background-image: linear-gradient(to bottom, rgba(21,33,64,.55), rgba(21,33,64,.9)), url('assets/png/karaoke.png'); background-image: linear-gradient(to bottom, rgba(21,33,64,.55), rgba(21,33,64,.9)), image-set(url('assets/avif/karaoke.avif') type('image/avif'), url('assets/png/karaoke.png') type('image/png'));">
+<section class="hero" id="special-events-hero" style="background-image: linear-gradient(to bottom, rgba(21,33,64,.55), rgba(21,33,64,.9)), url('assets/png/drink.png'); background-image: linear-gradient(to bottom, rgba(21,33,64,.55), rgba(21,33,64,.9)), image-set(url('assets/avif/drink.avif') type('image/avif'), url('assets/png/drink.png') type('image/png'));">
   <div class="hero-content">
     <p class="hero-eyebrow">Special Events</p>
     <h1 class="hero-title" id="special-events-title">Loading&hellip;</h1>
@@ -52,63 +52,17 @@
 
 <main class="wide">
   <section class="card">
-    <h2>Live Music Schedule</h2>
-    <div class="event-grid">
-      <div class="event-card" style="cursor: default;">
-        <div class="event-date">Friday Nights</div>
-        <div class="beer-name">Local Acoustic &amp; Regional Rock</div>
-        <p class="beer-style m-0 mt-1">Local acoustic artists and regional rock bands. Typically starting at 8:00 PM.</p>
-      </div>
-      <div class="event-card" style="cursor: default;">
-        <div class="event-date">Saturday Nights</div>
-        <div class="beer-name">Full Band Showcase</div>
-        <p class="beer-style m-0 mt-1">Full band performances, country showcases, and high-energy cover acts.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>Upcoming Shows</h2>
+    <h2>Upcoming Events</h2>
     <div class="event-grid" id="event-grid">
       <p class="empty-note">Loading events...</p>
     </div>
   </section>
 
-  <section class="card">
-    <h2>Want to Play Here?</h2>
-    <p class="empty-note">Send us your act and we&apos;ll be in touch about booking a night.</p>
-    <form id="band-form">
-      <div class="field">
-        <label for="bandName">Band name</label>
-        <input type="text" id="bandName" name="bandName" required />
-      </div>
-      <div class="field">
-        <label for="genre">Genre</label>
-        <input type="text" id="genre" name="genre" placeholder="e.g. Indie rock" required />
-      </div>
-      <div class="field">
-        <label for="rate">Requested rate ($, optional)</label>
-        <input type="number" id="rate" name="rate" min="0" step="1" />
-      </div>
-      <div class="field">
-        <label for="email">Contact email</label>
-        <input type="email" id="email" name="email" required />
-      </div>
-      <div class="field">
-        <label for="mediaLink">Spotify or YouTube link</label>
-        <input type="url" id="mediaLink" name="mediaLink" placeholder="https://open.spotify.com/artist/..." required />
-      </div>
-      <div id="turnstile-bands" class="cf-turnstile" data-sitekey="0x4AAAAAAETNf1ff8rNZPBRA" data-action="bands"></div>
-      <button type="submit">Apply to Play</button>
-      <div class="status-msg" id="band-status"></div>
-    </form>
-  </section>
 </main>
 
-<div class="staff-divider" aria-hidden="true"></div>
+<div class="section-divider" aria-hidden="true"></div>
 <footer class="site-footer"><a href="admin/login.html">Staff Login</a></footer>
 
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="js/nav.js"></script>
 <script src="js/events.js"></script>
 </body>

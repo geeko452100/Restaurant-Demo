@@ -7,7 +7,6 @@ import { getDb } from "./db/index";
 import {
   getMenuByCategory,
   getUpcomingEvents,
-  getBandApplications,
   getTodaysSpecial,
   getBookedSeatNumbers,
   getUpcomingReservations,
@@ -17,8 +16,6 @@ import {
   todayCentralISO,
 } from "./db/queries";
 import {
-  bandApplications,
-  bandApplicationStatus,
   events,
   menuCategories,
   menuCategorySections,
@@ -30,7 +27,6 @@ import {
   reservations,
 } from "./db/schema";
 import { login, logout, isAuthenticated, requireAuth } from "./lib/auth";
-import { notifyOwnerOfBandApplication } from "./lib/mailer";
 import { checkRateLimit } from "./lib/rateLimit";
 import { sendReservationSms } from "./lib/reservationNotify";
 import { SEAT_LAYOUT, findSeat } from "./lib/seatLayout";
@@ -272,94 +268,6 @@ app.delete("/api/events/:id", requireAuth, async (c) => {
   const [deleted] = await getDb(c.env.DB).delete(events).where(eq(events.id, eventId)).returning();
   if (!deleted) return c.json({ error: "Event not found" }, 404);
   return c.json({ ok: true });
-});
-
-// ---------- Band applications ----------
-
-const mediaLinkSchema = z
-  .string()
-  .trim()
-  .url()
-  .refine((url) => {
-    try {
-      const host = new URL(url).hostname.replace(/^www\./, "");
-      return (
-        host === "open.spotify.com" ||
-        host.endsWith(".spotify.com") ||
-        host === "youtube.com" ||
-        host === "youtu.be"
-      );
-    } catch {
-      return false;
-    }
-  }, "media link must be a Spotify or YouTube URL");
-
-const newApplicationSchema = z.object({
-  bandName: z.string().trim().min(1).max(120),
-  genre: z.string().trim().min(1).max(60),
-  rate: z.coerce.number().min(0).max(100000).optional(),
-  email: z.string().trim().email(),
-  mediaLink: mediaLinkSchema,
-});
-
-app.get("/api/bands", requireAuth, async (c) => {
-  const applications = await getBandApplications(getDb(c.env.DB));
-  return c.json(applications);
-});
-
-app.post("/api/bands", async (c) => {
-  const ip = c.req.header("CF-Connecting-IP") ?? "unknown";
-  if (!(await checkRateLimit(c.env.PUBLIC_FORM_RATE_LIMITER, `bands:${ip}`))) {
-    return c.json({ error: "Too many submissions. Try again in a minute." }, 429);
-  }
-
-  const body = await c.req.json().catch(() => null);
-
-  const humanVerified = await verifyTurnstile(
-    c.env.TURNSTILE_SECRET,
-    (body as { turnstileToken?: unknown } | null)?.turnstileToken,
-    "bands",
-    c.env.TURNSTILE_HOSTNAMES,
-    ip
-  );
-  if (!humanVerified) {
-    return c.json({ error: "Verification failed. Please try again." }, 403);
-  }
-
-  const parsed = newApplicationSchema.safeParse(body);
-  if (!parsed.success) {
-    return c.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, 400);
-  }
-
-  const [application] = await getDb(c.env.DB)
-    .insert(bandApplications)
-    .values(parsed.data)
-    .returning();
-
-  notifyOwnerOfBandApplication(c.env, c.executionCtx, parsed.data);
-  return c.json(application, 201);
-});
-
-const statusSchema = z.object({ status: z.enum(bandApplicationStatus) });
-
-app.patch("/api/bands/:id", requireAuth, async (c) => {
-  const applicationId = Number(c.req.param("id"));
-  if (!Number.isInteger(applicationId)) return c.json({ error: "Invalid application id" }, 400);
-
-  const body = await c.req.json().catch(() => null);
-  const parsed = statusSchema.safeParse(body);
-  if (!parsed.success) {
-    return c.json({ error: "status must be Pending, Reviewed, or Booked" }, 400);
-  }
-
-  const [updated] = await getDb(c.env.DB)
-    .update(bandApplications)
-    .set({ status: parsed.data.status })
-    .where(eq(bandApplications.id, applicationId))
-    .returning();
-
-  if (!updated) return c.json({ error: "Application not found" }, 404);
-  return c.json(updated);
 });
 
 // ---------- Reservations ----------
