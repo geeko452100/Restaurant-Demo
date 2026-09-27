@@ -1,6 +1,9 @@
 import type { Context, Next } from "hono";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
+import { eq } from "drizzle-orm";
 import type { Env } from "../env";
+import { getDb } from "../db/index";
+import { staffUsers } from "../db/schema";
 
 const COOKIE_NAME = "session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
@@ -91,14 +94,29 @@ async function verifySessionToken(token: string, secret: string): Promise<boolea
   }
 }
 
-export async function login(c: Context<{ Bindings: Env }>, email: string, password: string) {
-  const salt = await passwordSalt(c.env.AUTH_SECRET);
-  const candidate = await derivePasswordHash(password, salt);
-  const expected = fromHex(c.env.ADMIN_PASSWORD_HASH);
+// The owner account (env vars, optional) is checked first, then the
+// staff_users table. An unknown email still runs one PBKDF2 derivation so
+// response timing doesn't reveal which emails have accounts.
+async function verifyCredentials(env: Env, email: string, password: string) {
+  const normalized = email.trim().toLowerCase();
 
-  const emailMatches = email.trim().toLowerCase() === c.env.ADMIN_EMAIL.trim().toLowerCase();
-  const passwordMatches = timingSafeEqual(candidate, expected);
-  if (!emailMatches || !passwordMatches) return false;
+  const ownerEmail = env.ADMIN_EMAIL?.trim().toLowerCase();
+  if (ownerEmail && env.ADMIN_PASSWORD_HASH && normalized === ownerEmail) {
+    const candidate = await derivePasswordHash(password, await passwordSalt(env.AUTH_SECRET));
+    return timingSafeEqual(candidate, fromHex(env.ADMIN_PASSWORD_HASH));
+  }
+
+  const [staff] = await getDb(env.DB).select().from(staffUsers).where(eq(staffUsers.email, normalized)).limit(1);
+  if (!staff) {
+    await derivePasswordHash(password, new Uint8Array(16));
+    return false;
+  }
+  const candidate = await derivePasswordHash(password, fromHex(staff.passwordSalt));
+  return timingSafeEqual(candidate, fromHex(staff.passwordHash));
+}
+
+export async function login(c: Context<{ Bindings: Env }>, email: string, password: string) {
+  if (!(await verifyCredentials(c.env, email, password))) return false;
 
   const token = await createSessionToken(email, c.env.AUTH_SECRET);
   setCookie(c, COOKIE_NAME, token, {

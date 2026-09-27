@@ -83,3 +83,7 @@ INSERT INTO events (title, description, event_date, start_time, cover_charge, im
 INSERT INTO band_applications (band_name, genre, rate, email, media_link, status) VALUES
   ('The Wandering Embers', 'Folk rock', 250.00, 'embers@example.com', 'https://open.spotify.com/artist/example1', 'Pending'),
   ('Static Harbor', 'Surf punk', 300.00, 'staticharbor@example.com', 'https://youtube.com/@statichabor', 'Reviewed');
+
+-- Demo staff login for /admin: staff@example.com / Password123!
+-- Generated with: npm run hash-password -- --staff staff@example.com 'Password123!'
+INSERT OR IGNORE INTO staff_users (email, password_hash, password_salt) VALUES ('staff@example.com', 'bf34adcc5ef4d6d5958c07870ed977cb466bf482ee52d0a9393da7b6be31b764', 'afd5a3af37e31eb99e38a99741590a66');

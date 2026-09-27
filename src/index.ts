@@ -34,6 +34,7 @@ import { notifyOwnerOfBandApplication } from "./lib/mailer";
 import { checkRateLimit } from "./lib/rateLimit";
 import { sendReservationSms } from "./lib/reservationNotify";
 import { SEAT_LAYOUT, findSeat } from "./lib/seatLayout";
+import { verifyTurnstile } from "./lib/turnstile";
 import { TAX_RATE, isOrderable, priceOrder } from "./lib/orders";
 
 const app = new Hono<{ Bindings: Env }>();

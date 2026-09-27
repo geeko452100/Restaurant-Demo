@@ -2,9 +2,10 @@ export interface Env {
   DB: D1Database;
   ASSETS: Fetcher;
 
-  // Owner login (see src/lib/auth.ts). No users table — single-owner demo.
-  ADMIN_EMAIL: string;
-  ADMIN_PASSWORD_HASH: string;
+  // Optional owner login (see src/lib/auth.ts). Staff accounts live in the
+  // staff_users table instead.
+  ADMIN_EMAIL?: string;
+  ADMIN_PASSWORD_HASH?: string;
   AUTH_SECRET: string;
 
   // Cloudflare Rate Limiting bindings (see src/lib/rateLimit.ts). Durable

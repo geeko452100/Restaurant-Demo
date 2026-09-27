@@ -152,6 +152,20 @@ export const orderItems = sqliteTable("order_items", {
   quantity: integer("quantity").notNull(),
 });
 
+// Staff logins for /admin, alongside the single owner account configured
+// via ADMIN_EMAIL / ADMIN_PASSWORD_HASH. Each row carries its own random
+// PBKDF2 salt, so a seeded hash works in every environment regardless of
+// AUTH_SECRET. Generate a row with `npm run hash-password -- --staff`.
+export const staffUsers = sqliteTable("staff_users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  email: text("email").notNull().unique(), // stored lowercased
+  passwordHash: text("password_hash").notNull(), // hex
+  passwordSalt: text("password_salt").notNull(), // hex
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+});
+
 export type MenuCategory = typeof menuCategories.$inferSelect;
 export type NewMenuCategory = typeof menuCategories.$inferInsert;
 export type MenuItem = typeof menuItems.$inferSelect;
@@ -164,3 +178,4 @@ export type Reservation = typeof reservations.$inferSelect;
 export type NewReservation = typeof reservations.$inferInsert;
 export type Order = typeof orders.$inferSelect;
 export type OrderItem = typeof orderItems.$inferSelect;
+export type StaffUser = typeof staffUsers.$inferSelect;
