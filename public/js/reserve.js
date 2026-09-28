@@ -110,12 +110,6 @@ formEl.addEventListener("submit", async (e) => {
     return;
   }
 
-  const turnstileToken = window.turnstile?.getResponse("turnstile-reserve");
-  if (!turnstileToken) {
-    showStatus("Please complete the verification.", "error");
-    return;
-  }
-
   const submitBtn = formEl.querySelector("button");
   submitBtn.disabled = true;
   showStatus("Booking...", "info");
@@ -124,7 +118,7 @@ formEl.addEventListener("submit", async (e) => {
     const res = await fetch("/api/reserve", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, phone, date, partySize, time, seatNumber, turnstileToken }),
+      body: JSON.stringify({ name, phone, date, partySize, time, seatNumber }),
     });
     const data = await res.json();
 
@@ -152,7 +146,6 @@ formEl.addEventListener("submit", async (e) => {
   } catch {
     showStatus("Something went wrong. Please try again.", "error");
   } finally {
-    window.turnstile?.reset("turnstile-reserve");
     submitBtn.disabled = false;
   }
 });

@@ -28,7 +28,7 @@ This account is created by the seed data (`src/db/seed.sql`).
 - **Cloudflare D1** (SQLite) through [Drizzle ORM](https://orm.drizzle.team)
 - **Static HTML + vanilla JS** in `public/`, served by Workers static assets
 - **Tailwind CSS**, compiled from `src/input.css` to `public/css/style.css`
-- **Turnstile** and **Rate Limiting** bindings protect the login and public forms
+- **Rate Limiting** bindings protect the login and public forms
 
 ## Getting started
 
@@ -55,8 +55,6 @@ Local secrets go in `.dev.vars` (gitignored). In production, set each one with `
 | --- | --- | --- |
 | `AUTH_SECRET` | Yes | Signs staff session cookies. Any long random string, e.g. `openssl rand -hex 32`. |
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH` | No | An optional owner login on top of the staff accounts. Generate the hash with `npm run hash-password -- "<AUTH_SECRET>" "<password>"`, and regenerate it whenever `AUTH_SECRET` changes. |
-| `TURNSTILE_SECRET` | Yes, for the reservation form | Turnstile secret key. The site key is in `reserve.html`. |
-| `TURNSTILE_HOSTNAMES` | Yes, for the reservation form | Comma-separated hostnames Turnstile should accept, e.g. `localhost,127.0.0.1,your-site.workers.dev`. |
 | `RESEND_API_KEY`, `RESEND_FROM_EMAIL` | No | Sends email through [Resend](https://resend.com), used for reservation texts. Without them, messages are just logged to the console. |
 | `VERIPHONE_API_KEY` | No | Looks up a guest's phone carrier so reservation confirmations can go out as a text via the carrier's email-to-SMS gateway. Logged to the console when unset. |
 
@@ -103,7 +101,7 @@ public/              Static site (HTML pages, JS, images, compiled CSS)
 src/
   index.ts           Worker entry: every /api route plus the cron handler
   db/                Drizzle schema, queries, and seed data
-  lib/               Auth, orders, seating, email/SMS, Turnstile, rate limiting
+  lib/               Auth, orders, seating, email/SMS, rate limiting
 drizzle/migrations/  SQL migrations applied by Wrangler
 scripts/             Password-hash helper
 ```

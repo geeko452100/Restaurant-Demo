@@ -30,7 +30,6 @@ import { login, logout, isAuthenticated, requireAuth } from "./lib/auth";
 import { checkRateLimit } from "./lib/rateLimit";
 import { sendReservationSms } from "./lib/reservationNotify";
 import { SEAT_LAYOUT, findSeat } from "./lib/seatLayout";
-import { verifyTurnstile } from "./lib/turnstile";
 import { TAX_RATE, isOrderable, priceOrder } from "./lib/orders";
 
 const app = new Hono<{ Bindings: Env }>();
@@ -324,17 +323,6 @@ app.post("/api/reserve", async (c) => {
   }
 
   const body = await c.req.json().catch(() => null);
-
-  const humanVerified = await verifyTurnstile(
-    c.env.TURNSTILE_SECRET,
-    (body as { turnstileToken?: unknown } | null)?.turnstileToken,
-    "reserve",
-    c.env.TURNSTILE_HOSTNAMES,
-    ip
-  );
-  if (!humanVerified) {
-    return c.json({ error: "Verification failed. Please try again." }, 403);
-  }
 
   const parsed = reservationSchema.safeParse(body);
   if (!parsed.success) {

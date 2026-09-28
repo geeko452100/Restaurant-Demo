@@ -22,7 +22,3 @@ VERIPHONE_API_KEY=
 # a live domain is required before this will actually send anything.
 RESEND_API_KEY=
 RESEND_FROM_EMAIL=
-
-# Turnstile (https://developers.cloudflare.com/turnstile/) - bot protection
-TURNSTILE_SECRET=
-TURNSTILE_HOSTNAMES=localhost,127.0.0.1

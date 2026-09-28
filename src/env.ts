@@ -13,13 +13,6 @@ export interface Env {
   LOGIN_RATE_LIMITER: RateLimit;
   PUBLIC_FORM_RATE_LIMITER: RateLimit;
 
-  // Turnstile (https://developers.cloudflare.com/turnstile/) - bot
-  // protection on the public reservation form (see
-  // src/lib/turnstile.ts). TURNSTILE_HOSTNAMES is a comma-separated
-  // allowlist of frontend hostnames siteverify may report back.
-  TURNSTILE_SECRET: string;
-  TURNSTILE_HOSTNAMES: string;
-
   // Carrier lookup for the email-to-SMS gateway (https://veriphone.io).
   VERIPHONE_API_KEY?: string;
 
