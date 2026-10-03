@@ -12,6 +12,31 @@ passwordToggle.addEventListener("click", () => {
 const formEl = document.getElementById("login-form");
 const statusEl = document.getElementById("login-status");
 
+// Demo site: pre-fill the seeded staff login (see src/db/seed.sql) and
+// explain why in a popup on first visit.
+const DEMO_EMAIL = "staff@example.com";
+const DEMO_PASSWORD = "Password123!";
+
+const demoDialog = document.getElementById("demo-dialog");
+formEl.elements.email.value = DEMO_EMAIL;
+passwordInput.value = DEMO_PASSWORD;
+document.getElementById("demo-email").textContent = DEMO_EMAIL;
+document.getElementById("demo-password").textContent = DEMO_PASSWORD;
+
+document.getElementById("demo-dismiss").addEventListener("click", () => {
+  demoDialog.close();
+  formEl.querySelector("button[type=submit]").focus();
+});
+document.getElementById("demo-signin").addEventListener("click", () => {
+  demoDialog.close();
+  formEl.requestSubmit();
+});
+// Clicking the dimmed backdrop (outside the dialog box) closes it too.
+demoDialog.addEventListener("click", (e) => {
+  if (e.target === demoDialog) demoDialog.close();
+});
+demoDialog.showModal();
+
 formEl.addEventListener("submit", async (e) => {
   e.preventDefault();
   const data = new FormData(formEl);

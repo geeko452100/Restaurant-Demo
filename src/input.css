@@ -408,6 +408,38 @@
     @apply mt-3.5 py-2.5 px-3.5 rounded-md text-sm font-sans bg-red/[.15] border border-red/40 text-[#e0897a];
   }
 
+  /* Demo-login popup on /admin/login: same navy card look as .card,
+     shown as a native modal <dialog>. */
+  .demo-dialog {
+    @apply w-[calc(100%-2rem)] max-w-md p-6 bg-gradient-to-b from-panel to-panel-2 border border-border rounded-xl shadow-2xl shadow-black/60 text-cream;
+    border-top: 3px solid theme("colors.brand.DEFAULT");
+  }
+  .demo-dialog::backdrop {
+    @apply bg-black/70 backdrop-blur-sm;
+  }
+  .demo-dialog h2 {
+    @apply mt-0 mb-3 text-brand-bright text-2xl font-semibold border-b border-border pb-3 flex items-center gap-2.5;
+  }
+  .demo-dialog h2::before {
+    content: "";
+    @apply w-1.5 h-1.5 rounded-full bg-brand shrink-0;
+  }
+  .demo-dialog p {
+    @apply font-sans text-base leading-relaxed mb-4;
+  }
+  .demo-creds {
+    @apply grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 m-0 mb-5 py-3 px-4 bg-black/25 border border-border rounded-md font-sans text-sm;
+  }
+  .demo-creds dt {
+    @apply text-muted;
+  }
+  .demo-creds dd {
+    @apply m-0 text-cream font-mono break-all;
+  }
+  .demo-dialog-actions {
+    @apply flex justify-end gap-3 flex-wrap;
+  }
+
   /* Events */
   .event-list {
     @apply list-none m-0 p-0;
