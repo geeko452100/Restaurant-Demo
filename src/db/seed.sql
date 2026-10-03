@@ -3,11 +3,11 @@
 --
 -- Category `section` values route items to their dedicated public page:
 -- 'burgers' -> /burgers, 'appetizers' -> /appetizers, 'drinks' -> /drinks.
--- Lunch Specials has no section — it only surfaces via the homepage
--- "today's special" banner (GET /api/specials), not a menu page.
+-- Lunch Specials has no section — it surfaces on /specials and in the
+-- homepage "today's special" banner (GET /api/specials).
 
 INSERT INTO menu_categories (id, name, display_order, image_url, section) VALUES
-  (1, 'Draft Beers', 1, '/assets/drink.webp', 'drinks'),
+  (1, 'Draft Beers', 1, '/assets/png/drink.png', 'drinks'),
   (2, 'Lunch Specials', 2, NULL, NULL),
   (3, 'Burgers & Sandwiches', 1, NULL, 'burgers'),
   (4, 'Appetizers', 1, NULL, 'appetizers'),
@@ -27,8 +27,11 @@ INSERT INTO menu_items (category_id, name, description, price, abv, image_url, d
   -- day_of_week: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat.
   (2, 'Chicken Salad Sandwich', 'Tuesday special · served with fresh chips', 8.99, NULL, NULL, 2, 1, 1, 0, 0, 1, NULL),
   (2, 'Wrap Wednesday', 'Any wrap, served with fresh chips', 8.99, NULL, NULL, 3, 1, 1, 0, 0, 2, NULL),
-  (2, 'Hamburger Special', 'Thursday special · served with fresh chips', 8.99, NULL, '/assets/burger.webp', 4, 1, 1, 0, 0, 3, NULL),
-  (2, 'Pulled Pork Nachos', 'Friday special', 9.99, NULL, '/assets/nachos.webp', 5, 1, 1, 1, 0, 4, NULL),
+  (2, 'Hamburger Special', 'Thursday special · served with fresh chips', 8.99, NULL, '/assets/png/burger.png', 4, 1, 1, 0, 0, 3, NULL),
+  (2, 'Pulled Pork Nachos', 'Friday special', 9.99, NULL, '/assets/png/nachos.png', 5, 1, 1, 1, 0, 4, NULL),
+  (2, 'Philly Monday', 'Philly Cheesesteak, served with fresh chips', 9.99, NULL, NULL, 1, 1, 1, 0, 0, 5, NULL),
+  (2, 'Saturday Skins & Sliders', 'Two mini burgers with a side of Tater Skins', 10.99, NULL, NULL, 6, 1, 1, 0, 0, 6, NULL),
+  (2, 'Sunday Roast Beef', 'Open-faced roast beef sandwich with gravy and fresh chips', 9.99, NULL, NULL, 0, 1, 1, 0, 0, 7, NULL),
   -- Burgers & Sandwiches
   (3, 'Hamburger', 'Grilled patty with fresh toppings', 11.99, NULL, NULL, NULL, 1, 1, 0, 0, 1, NULL),
   (3, 'Double Burger', 'Two grilled patties', 13.99, NULL, NULL, NULL, 1, 1, 0, 0, 2, NULL),
